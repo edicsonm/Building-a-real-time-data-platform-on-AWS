@@ -1,1 +1,2 @@
-# Building-a-real-time-data-platform-on-AWS
+# Building A Real Time Data Platform on AWS
+## Q4 Learning Series Workshop
