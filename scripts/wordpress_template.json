@@ -225,7 +225,7 @@
 		"ALBTargetGroup": {
 			"Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
 			"Properties": {
-				"HealthCheckPath": "/",
+				"HealthCheckPath": "/wordpress/wp-admin/install.php",
 				"HealthCheckIntervalSeconds": 10,
 				"HealthCheckTimeoutSeconds": 5,
 				"HealthyThresholdCount": 2,
