@@ -191,8 +191,8 @@ def main():
     
     with open(logPath, "a") as f:
         print ("Generating new clickstream log at {}".format(logPath))
-	f.write(generate_clickstreamRow())
-        f.write("")
+        f.write(generate_clickstreamRow())
+        f.write("\n")
         time.sleep(1)
 
 if __name__ == '__main__':

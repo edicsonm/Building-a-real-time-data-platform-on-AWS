@@ -26,7 +26,7 @@
 			"Description": "WebServer EC2 instance type",
 			"Type": "String",
 			"Default": "t2.small",
-			"AllowedValues": ["t2.small", "t2.medium", "t2.large"],
+			"AllowedValues": ["t1.micro", "t2.nano", "t2.micro", "t2.small", "t2.medium", "t2.large", "m1.small", "m1.medium", "m1.large", "m1.xlarge", "m2.xlarge", "m2.2xlarge", "m2.4xlarge", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.10xlarge", "c1.medium", "c1.xlarge", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge", "c4.8xlarge", "g2.2xlarge", "g2.8xlarge", "r3.large", "r3.xlarge", "r3.2xlarge", "r3.4xlarge", "r3.8xlarge", "i2.xlarge", "i2.2xlarge", "i2.4xlarge", "i2.8xlarge", "d2.xlarge", "d2.2xlarge", "d2.4xlarge", "d2.8xlarge", "hi1.4xlarge", "hs1.8xlarge", "cr1.8xlarge", "cc2.8xlarge", "cg1.4xlarge"],
 			"ConstraintDescription": "must be a valid EC2 instance type."
 		},
 
@@ -44,7 +44,7 @@
 			"Description": "Database instance class",
 			"Type": "String",
 			"Default": "db.t2.small",
-			"AllowedValues": ["db.t2.small", "db.t2.medium", "db.t2.large"],
+			"AllowedValues": ["db.t1.micro", "db.m1.small", "db.m1.medium", "db.m1.large", "db.m1.xlarge", "db.m2.xlarge", "db.m2.2xlarge", "db.m2.4xlarge", "db.m3.medium", "db.m3.large", "db.m3.xlarge", "db.m3.2xlarge", "db.m4.large", "db.m4.xlarge", "db.m4.2xlarge", "db.m4.4xlarge", "db.m4.10xlarge", "db.r3.large", "db.r3.xlarge", "db.r3.2xlarge", "db.r3.4xlarge", "db.r3.8xlarge", "db.m2.xlarge", "db.m2.2xlarge", "db.m2.4xlarge", "db.cr1.8xlarge", "db.t2.micro", "db.t2.small", "db.t2.medium", "db.t2.large"],
 			"ConstraintDescription": "must select a valid database instance type."
 		},
 
@@ -78,6 +78,23 @@
 			"ConstraintDescription": "must contain only alphanumeric characters."
 		},
 
+		"MultiAZDatabase": {
+			"Default": "false",
+			"Description": "Create a Multi-AZ MySQL Amazon RDS database instance",
+			"Type": "String",
+			"AllowedValues": ["true", "false"],
+			"ConstraintDescription": "must be either true or false."
+		},
+
+		"WebServerCapacity": {
+			"Default": "1",
+			"Description": "The initial number of WebServer instances",
+			"Type": "Number",
+			"MinValue": "1",
+			"MaxValue": "5",
+			"ConstraintDescription": "must be between 1 and 5 EC2 instances."
+		},
+
 		"DBAllocatedStorage": {
 			"Default": "5",
 			"Description": "The size of the database (Gb)",
@@ -90,6 +107,15 @@
 
 	"Mappings": {
 		"AWSInstanceType2Arch": {
+			"t1.micro": {
+				"Arch": "HVM64"
+			},
+			"t2.nano": {
+				"Arch": "HVM64"
+			},
+			"t2.micro": {
+				"Arch": "HVM64"
+			},
 			"t2.small": {
 				"Arch": "HVM64"
 			},
@@ -97,12 +123,161 @@
 				"Arch": "HVM64"
 			},
 			"t2.large": {
+				"Arch": "HVM64"
+			},
+			"m1.small": {
+				"Arch": "HVM64"
+			},
+			"m1.medium": {
+				"Arch": "HVM64"
+			},
+			"m1.large": {
+				"Arch": "HVM64"
+			},
+			"m1.xlarge": {
+				"Arch": "HVM64"
+			},
+			"m2.xlarge": {
+				"Arch": "HVM64"
+			},
+			"m2.2xlarge": {
+				"Arch": "HVM64"
+			},
+			"m2.4xlarge": {
+				"Arch": "HVM64"
+			},
+			"m3.medium": {
+				"Arch": "HVM64"
+			},
+			"m3.large": {
+				"Arch": "HVM64"
+			},
+			"m3.xlarge": {
+				"Arch": "HVM64"
+			},
+			"m3.2xlarge": {
+				"Arch": "HVM64"
+			},
+			"m4.large": {
+				"Arch": "HVM64"
+			},
+			"m4.xlarge": {
+				"Arch": "HVM64"
+			},
+			"m4.2xlarge": {
+				"Arch": "HVM64"
+			},
+			"m4.4xlarge": {
+				"Arch": "HVM64"
+			},
+			"m4.10xlarge": {
+				"Arch": "HVM64"
+			},
+			"c1.medium": {
+				"Arch": "HVM64"
+			},
+			"c1.xlarge": {
+				"Arch": "HVM64"
+			},
+			"c3.large": {
+				"Arch": "HVM64"
+			},
+			"c3.xlarge": {
+				"Arch": "HVM64"
+			},
+			"c3.2xlarge": {
+				"Arch": "HVM64"
+			},
+			"c3.4xlarge": {
+				"Arch": "HVM64"
+			},
+			"c3.8xlarge": {
+				"Arch": "HVM64"
+			},
+			"c4.large": {
+				"Arch": "HVM64"
+			},
+			"c4.xlarge": {
+				"Arch": "HVM64"
+			},
+			"c4.2xlarge": {
+				"Arch": "HVM64"
+			},
+			"c4.4xlarge": {
+				"Arch": "HVM64"
+			},
+			"c4.8xlarge": {
+				"Arch": "HVM64"
+			},
+			"g2.2xlarge": {
+				"Arch": "HVMG2"
+			},
+			"g2.8xlarge": {
+				"Arch": "HVMG2"
+			},
+			"r3.large": {
+				"Arch": "HVM64"
+			},
+			"r3.xlarge": {
+				"Arch": "HVM64"
+			},
+			"r3.2xlarge": {
+				"Arch": "HVM64"
+			},
+			"r3.4xlarge": {
+				"Arch": "HVM64"
+			},
+			"r3.8xlarge": {
+				"Arch": "HVM64"
+			},
+			"i2.xlarge": {
+				"Arch": "HVM64"
+			},
+			"i2.2xlarge": {
+				"Arch": "HVM64"
+			},
+			"i2.4xlarge": {
+				"Arch": "HVM64"
+			},
+			"i2.8xlarge": {
+				"Arch": "HVM64"
+			},
+			"d2.xlarge": {
+				"Arch": "HVM64"
+			},
+			"d2.2xlarge": {
+				"Arch": "HVM64"
+			},
+			"d2.4xlarge": {
+				"Arch": "HVM64"
+			},
+			"d2.8xlarge": {
+				"Arch": "HVM64"
+			},
+			"hi1.4xlarge": {
+				"Arch": "HVM64"
+			},
+			"hs1.8xlarge": {
+				"Arch": "HVM64"
+			},
+			"cr1.8xlarge": {
+				"Arch": "HVM64"
+			},
+			"cc2.8xlarge": {
 				"Arch": "HVM64"
 			}
 		},
 
 		"AWSInstanceType2NATArch": {
-
+			"t1.micro": {
+				"Arch": "NATHVM64"
+			},
+			"t2.nano": {
+				"Arch": "NATHVM64"
+			},
+			"t2.micro": {
+				"Arch": "NATHVM64"
+			},
 			"t2.small": {
 				"Arch": "NATHVM64"
 			},
@@ -111,8 +286,148 @@
 			},
 			"t2.large": {
 				"Arch": "NATHVM64"
+			},
+			"m1.small": {
+				"Arch": "NATHVM64"
+			},
+			"m1.medium": {
+				"Arch": "NATHVM64"
+			},
+			"m1.large": {
+				"Arch": "NATHVM64"
+			},
+			"m1.xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"m2.xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"m2.2xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"m2.4xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"m3.medium": {
+				"Arch": "NATHVM64"
+			},
+			"m3.large": {
+				"Arch": "NATHVM64"
+			},
+			"m3.xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"m3.2xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"m4.large": {
+				"Arch": "NATHVM64"
+			},
+			"m4.xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"m4.2xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"m4.4xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"m4.10xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"c1.medium": {
+				"Arch": "NATHVM64"
+			},
+			"c1.xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"c3.large": {
+				"Arch": "NATHVM64"
+			},
+			"c3.xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"c3.2xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"c3.4xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"c3.8xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"c4.large": {
+				"Arch": "NATHVM64"
+			},
+			"c4.xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"c4.2xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"c4.4xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"c4.8xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"g2.2xlarge": {
+				"Arch": "NATHVMG2"
+			},
+			"g2.8xlarge": {
+				"Arch": "NATHVMG2"
+			},
+			"r3.large": {
+				"Arch": "NATHVM64"
+			},
+			"r3.xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"r3.2xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"r3.4xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"r3.8xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"i2.xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"i2.2xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"i2.4xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"i2.8xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"d2.xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"d2.2xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"d2.4xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"d2.8xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"hi1.4xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"hs1.8xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"cr1.8xlarge": {
+				"Arch": "NATHVM64"
+			},
+			"cc2.8xlarge": {
+				"Arch": "NATHVM64"
 			}
-
 		},
 		"AWSRegionArch2AMI": {
 			"us-east-1": {
@@ -198,10 +513,7 @@
 			"Properties": {
 				"Subnets": {
 					"Ref": "Subnets"
-				},
-				"SecurityGroups": [{
-					"Ref": "ALBSecurityGroup"
-				}]
+				}
 			}
 		},
 
@@ -225,7 +537,7 @@
 		"ALBTargetGroup": {
 			"Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
 			"Properties": {
-				"HealthCheckPath": "/",
+				"HealthCheckPath": "/wordpress/wp-admin/install.php",
 				"HealthCheckIntervalSeconds": 10,
 				"HealthCheckTimeoutSeconds": 5,
 				"HealthyThresholdCount": 2,
@@ -248,22 +560,6 @@
 						"Value": "30"
 					}
 				]
-			}
-		},
-		"ALBSecurityGroup": {
-			"Type": "AWS::EC2::SecurityGroup",
-			"Properties": {
-				"GroupDescription": "Enable HTTP access via port 80",
-				"SecurityGroupIngress": [{
-						"IpProtocol": "tcp",
-						"FromPort": "80",
-						"ToPort": "80",
-						"CidrIp": "0.0.0.0/0"
-					}
-				],
-				"VpcId": {
-					"Ref": "VpcId"
-				}
 			}
 		},
 
@@ -295,44 +591,7 @@
 				}
 			}
 		},
-		"IAMEC2InstanceProfile": {
-			"Type": "AWS::IAM::InstanceProfile",
-			"Properties": {
-				"Path": "/",
-				"Roles": [{
-					"Ref": "EC2IAMRole"
-				}]
-			}
-		},
-		"EC2IAMRole": {
-			"Type": "AWS::IAM::Role",
-			"Properties": {
-				"AssumeRolePolicyDocument": {
-					"Version": "2012-10-17",
-					"Statement": [{
-						"Effect": "Allow",
-						"Principal": {
-							"Service": ["ec2.amazonaws.com"]
-						},
-						"Action": [
-							"sts:AssumeRole"
-						]
-					}]
-				},
-				"Policies": [{
-					"PolicyName": "root",
-					"PolicyDocument": {
-						"Version": "2012-10-17",
-						"Statement": [{
-							"Effect": "Allow",
-							"Action": "*",
-							"Resource": "*"
-						}]
-					}
-				}],
-				"Path": "/"
-			}
-		},
+
 		"WebServerGroup": {
 			"Type": "AWS::AutoScaling::AutoScalingGroup",
 			"Properties": {
@@ -343,22 +602,24 @@
 					"Ref": "LaunchConfig"
 				},
 				"MinSize": "1",
-				"MaxSize": "1",
-				"DesiredCapacity": "1",
+				"MaxSize": "5",
+				"DesiredCapacity": {
+					"Ref": "WebServerCapacity"
+				},
 				"TargetGroupARNs": [{
 					"Ref": "ALBTargetGroup"
 				}]
 			},
 			"CreationPolicy": {
 				"ResourceSignal": {
-					"Timeout": "PT20M"
+					"Timeout": "PT15M"
 				}
 			},
 			"UpdatePolicy": {
 				"AutoScalingRollingUpdate": {
 					"MinInstancesInService": "1",
 					"MaxBatchSize": "1",
-					"PauseTime": "PT20M",
+					"PauseTime": "PT15M",
 					"WaitOnResourceSignals": "true"
 				}
 			}
@@ -491,10 +752,6 @@
 				"InstanceType": {
 					"Ref": "InstanceType"
 				},
-				"InstanceMonitoring": "true",
-				"IamInstanceProfile": {
-					"Ref": "IAMEC2InstanceProfile"
-				},
 				"SecurityGroups": [{
 					"Ref": "WebServerSecurityGroup"
 				}],
@@ -506,31 +763,6 @@
 						"Fn::Join": ["", [
 							"#!/bin/bash -xe\n",
 							"yum update -y aws-cfn-bootstrap\n",
-
-							"sudo yum install https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm -y\n",
-
-							"sleep 2\n",
-
-							"sudo yum install python36 -y\n",
-
-							"sleep 2\n",
-
-							"sudo yum install https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm -y\n",
-
-							"sleep 2\n",
-
-							"mkdir /home/ec2-user/module1\n",
-
-							"mkdir /home/ec2-user/module2\n",
-
-							"mkdir /home/ec2-user/module3\n",
-
-							"sudo chmod 777 /var/log/httpd/\n",
-
-							"wget https://s3.amazonaws.com/injae-public-download/clickstream.py -P /home/ec2-user/module2/\n",
-
-							"wget https://s3.amazonaws.com/injae-public-download/produce.sh -P /home/ec2-user/module2/\n",
-https://s3.amazonaws.com/injae-public-download/wordpress_template.json
 
 							"/opt/aws/bin/cfn-init -v ",
 							"         --stack ", {
@@ -550,12 +782,9 @@ https://s3.amazonaws.com/injae-public-download/wordpress_template.json
 							"         --region ", {
 								"Ref": "AWS::Region"
 							}, "\n"
-
-
 						]]
 					}
 				}
-
 			}
 		},
 
@@ -576,26 +805,6 @@ https://s3.amazonaws.com/injae-public-download/wordpress_template.json
 				}
 			}
 		},
-		"RdsMonitoringRole": {
-			"Type": "AWS::IAM::Role",
-			"Properties": {
-				"AssumeRolePolicyDocument": {
-					"Version": "2012-10-17",
-					"Statement": [{
-						"Sid": "",
-						"Effect": "Allow",
-						"Principal": {
-							"Service": "monitoring.rds.amazonaws.com"
-						},
-						"Action": "sts:AssumeRole"
-					}]
-				},
-				"ManagedPolicyArns": [
-					"arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
-				],
-				"Path": "/"
-			}
-		},
 
 		"DBInstance": {
 			"Type": "AWS::RDS::DBInstance",
@@ -604,6 +813,9 @@ https://s3.amazonaws.com/injae-public-download/wordpress_template.json
 					"Ref": "DBName"
 				},
 				"Engine": "MySQL",
+				"MultiAZ": {
+					"Ref": "MultiAZDatabase"
+				},
 				"MasterUsername": {
 					"Ref": "DBUser"
 				},
@@ -618,14 +830,7 @@ https://s3.amazonaws.com/injae-public-download/wordpress_template.json
 				},
 				"VPCSecurityGroups": [{
 					"Fn::GetAtt": ["DBEC2SecurityGroup", "GroupId"]
-				}],
-				"MonitoringInterval": "1",
-				"MonitoringRoleArn": {
-					"Fn::GetAtt": [
-						"RdsMonitoringRole",
-						"Arn"
-					]
-				}
+				}]
 			}
 		}
 	},
