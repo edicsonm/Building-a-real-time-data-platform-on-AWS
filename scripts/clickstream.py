@@ -171,16 +171,16 @@ def set_cookies():
 
 def generate_clickstreamRow():
     row = (
-        " " + set_sourceIp() +
+        set_sourceIp() +
         " " + "-" + 
         " " + "-" + 
         " " + set_requestTime() + 
-        " " + set_method() + " " + set_uriPath() + " " + "HTTP/1.1" +
+        " " + "\"" + set_method() + " " + set_uriPath() + " " + "HTTP/1.1" + "\"" +
         " " + set_statusCode() +
         " " + set_byteSize() + 
-        " " + set_referer() + 
-        " " + set_userAgent() + 
-        " " + set_cookies()
+        " " + "\"" + set_referer() + "\"" + 
+        " " + "\"" + set_userAgent() + "\"" + 
+        " " + "\"" + set_cookies() + "\""
     )
     return (row)
 
