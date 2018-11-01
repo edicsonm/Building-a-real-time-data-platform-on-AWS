@@ -31,8 +31,8 @@ def set_method():
     return (set_randomWeighting(GET=6, POST=3, OPTIONS=1))
 
 def set_uriPath():
-    rootPath = set_randomWeighting(home=13, products=5, categories=4)
-    if rootPath == "home":
+    rootPath = set_randomWeighting(home=13, products=5, categories=4, signup=1, signin=2)
+    if rootPath == "home" or rootPath == "signup" or rootPath == "signin":
         secondPath = ""
     elif rootPath == "products":
         secondPath = set_randomWeighting(**({"":3}), Porcubbuks=1, Armawoo=1, Leopowwi=1, Serpaaslem=1, Glorsibou=1, Cuksing=1, Foxboon=1, Blactile=1, Meeqeos=1, Claassoukse=1) + "/"

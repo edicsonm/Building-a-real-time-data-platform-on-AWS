@@ -525,7 +525,7 @@
 
 							"mkdir /home/ec2-user/module3\n",
 
-							"sudo chmod 777 /var/log/httpd/\n",
+							"sudo chmod -R 777 /var/log/\n",
 
 							"wget https://s3.amazonaws.com/injae-public-download/clickstream.py -P /home/ec2-user/module2/\n",
 
