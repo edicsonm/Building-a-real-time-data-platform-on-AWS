@@ -30,21 +30,22 @@ def lambda_handler(event, context):
     output = []
     succeeded_record_cnt = 0
     failed_record_cnt = 0
-
+    
     safe_string_to_int = lambda x: int(x) if x.isdigit() else x
 
+    ## Because data in Kinesis is base64 encoded, we have to decode it before changing the output as a JSON document
     for record in event['records']:
         print(record['recordId'])
         payload = base64.b64decode(record['data'])
         payload = payload.decode("utf-8")
-        print ("This is the payload: {}".format(payload))
+        print ("This is the payload: {}".format(payload)) 
         
         # check if clickstream log format else fall back to other log format
         regex = '^([\d.]+) (\S+) (\S+) \[([\w:\/]+)(\s[\+\-]\d{4}){0,1}\] "(.+?)" (\d{3}) (\d+) (".+?") (".+?") "user = ([^;]*)' 
         p = re.compile(regex)
         m = p.match(payload)
         
-        if p.match(payload) is None: # log format doesnt have cookie data
+        if p.match(payload) is None: # log format doesnt have cookie data (username)
             regex = '^([\d.]+) (\S+) (\S+) \[([\w:/]+)(\s[\+\-]\d{4}){0,1}\] \"(.+?)\" (\d{3}) (\d+) (".+?") (".+?")'
             p = re.compile(regex)
             m = p.match(payload)
@@ -53,12 +54,13 @@ def lambda_handler(event, context):
             succeeded_record_cnt += 1
 
             ts = m.group(4)
+            ## changing the timestamp format
             try:
                 d = parse(ts.replace(':', ' ', 1))
                 ts = d.isoformat()
             except:
                 print('Parsing the timestamp to date failed.')
-            
+            ## Creating our dictionary (hash map) using extracted values from our log file
             data_field = {
                 'host': m.group(1),
                 'ident': m.group(2),
@@ -70,8 +72,8 @@ def lambda_handler(event, context):
                 'referer': safe_string_to_int(m.group(9)),
                 'user-agent': safe_string_to_int(m.group(10))
             }
-                
-            if (len(m.groups()) > 10): # clickstream log, adding userid from cookie
+            ## Clickstream log, adding username from cookie field
+            if (len(m.groups()) > 10):
                 data_field['username'] = safe_string_to_int(m.group(11))
     
             if m.group(6) and len(m.group(6).split()) > 1:
@@ -103,6 +105,8 @@ def lambda_handler(event, context):
             }
 
         output.append(output_record)
-
+    
+    ## This returns the transformed data back to Kinesis Data Firehose for delivery to our Elasticsearch domain
     print('Processing completed.  Successful records {}, Failed records {}.'.format(succeeded_record_cnt, failed_record_cnt))
+    print ("This is the output: {}".format(output))
     return {'records': output}
