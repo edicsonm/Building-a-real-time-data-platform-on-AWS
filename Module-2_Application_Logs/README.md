@@ -227,7 +227,7 @@ Now that our ETL Lambda has been created, let's create a new Kinesis Data Fireho
 
 1. Verify that Record format conversion is **Disabled** under **Convert record format**. If we wanted to deliver the data within Firehose for running analytics within Redshift or S3 (via Athena), this would be a great way to automatically transform the data into a columnar format such as Parquet for a more efficient file format for analytics.
 
-    ![Firehose_Lambda](images/Firehose_lambda.png)
+    ![Firehose_Lambda](images/Firehose_Lambda.png)
 
 1. Proceed to the next page by selecting **Next**.
 
