@@ -1,66 +1,19 @@
-# Module 2
+# Module 2: 
 
-1. Wordpress Site
-1. Generate clickstream logs on WP (timestamp, page viewed, username) with script
-1. Setting up Kinesis-Agent
-1. Firehose w/ Transformation Lambda for ETL
-1. Publish to ElasticSearch
-1. Verify on Kibana (500 requests vs 200 requests, page views, sign up, sign in, usernames)
+## Introduction
+In this Module, we will explore how we can surface clickstream logs within our Web Server to power a visualization dashboard on Kibana. By collecting and analyzing these data, we can build up user behaviour profiles as they browse our unicorn store and derive insights on customer behaviour.
 
+## Architecture
+![Module_2_Architecture](images/Module_2_infrastructure.png)
 
-# instructions
-
-## Create an Amazon Elasticsearch cluster
-With data being generated from multiple different sources, we need a way to search, analyze and visualize it to extract meaningful information and insights. To enable this, we can use Amazon Elasticsearch, a fully managed service that helps with the deployment, operations and scaling the open source Elasticsearch engine. Using the integrated Kibana tool, we can create custom visualizations and dashboards to enable us to make faster and more informed decisions about our environment!
-
-1. In the AWS Management Console select **Services** then select **Elasticsearch Service** under Analytics.
-
-1. In the service console, select **Create a new domain**
-
-1. Under **Domain Name** enter a name for your cluster and ensure that the selected **Version** is **6.3**. Proceed to the **Next** step.
-
-1. In this page, we can configure the number of nodes and HA settings for our Elasticsearch cluster. We will use the default single node setting, but for production environments, you would use multiple nodes across different availability zones using the **zone awareness** setting. Continue by leaving all settings as-is under **Configure cluster** and proceed to the **Next** step. 
-
-1. In step 3: Set up access page, you can configure Network level access and Kibana login authentication through integration with Amazon Cognito (SAML with existing IdP is supported through Cognito). In production environments, you would launch the Elasticsearch cluster in a private subnet (where it is accessible via VPN or a proxy in a DMZ). However for this workshop, we will use **Public Access** to allow access to the Kibana dashboard over the internet.
-
-1. Select **Public access** under **Network configuration** and leave the **Node-to-node** encryption unchecked.
-
-1. Leave **Enable Amazon Cognito for authentication** unticked under **Kibana authentication**.
-
-1. Under **Access policy**, use the drop down menu on **Select a template**, and select **Allow access to the domain from specific IP(s)**.
-
-1. Enter your current IP address in the pop up window (you can find out your current public address by googling "Whats my IP"). This should automatically generate an access policy in JSON like below.
-
-    ```json
-        {
-        	"Version": "2012-10-17",
-        	"Statement": [{
-        		"Effect": "Allow",
-        		"Principal": {
-        			"AWS": "*"
-        		},
-        		"Action": [
-        			"es:*"
-        		],
-        		"Condition": {
-        			"IpAddress": {
-        				"aws:SourceIp": [
-        					"54.240.193.1"
-        				]
-        			}
-        		},
-        		"Resource": "arn:aws:es:ap-southeast-1:708252083442:domain/realtimeworkshop/*"
-        	}]
-        }
-    ```
-1. Proceed to the next page by selecting **Next**.
-
-1. Review that all the settings are correct using the above configurations and create the cluster by selecting **Confirm**. The cluster will take 10-15 min to launch.
 
 ## Create Firehose with Lambda ETL
-As new visitors arrive to our website, our apache webserver captures each request in the form of clickstream logs. By capturing and ingesting these logs in real time, we can create visibility on whats happening within our application and derive insights such as seeing the breakdown of requested pages by popularity, following the trail of page paths a visitor took and troubleshooting by tracking the number of 5XX HTTP responses back to the user. By using Amazon Kinesis Data Firehose for a fully managed data ingestion service, we can apply ETL on the fly with integration with AWS Lambda to transform our clickstream logs into an Elasticsearch compatible format, and continually deliver and update our Elasticsearch indexes.
+As new visitors arrive to our website, our apache webserver captures each request in the form of clickstream logs. By capturing and ingesting these logs in real time, we can create visibility on whats happening within our application and get valuable insights such as seeing the breakdown of requested pages by popularity, following the trail of page paths a visitor took and troubleshooting by tracking the number of 5XX HTTP responses back to the user. By using Amazon Kinesis Data Firehose for a fully managed data ingestion service, we can apply ETL on the fly with integration with AWS Lambda to transform our clickstream logs into an Elasticsearch compatible format, and continually deliver and update our Elasticsearch indexes.
 
 We will first create the ETL Lambda function, which we will use later in our Kinesis Data Firehose.
+
+<details>
+<summary><strong>Creating an ETL Lambda Step-By-Step Instructions (expand for details)</strong></summary><p>
 
 ## Creating an ETL Lambda function
 
@@ -209,9 +162,13 @@ We will first create the ETL Lambda function, which we will use later in our Kin
 
 1. Finish creating the function by selecting **Save** at the top of the page.
 
+</p></details>
 
 ## Creating a Kinesis Firehose
 Now that our ETL Lambda has been created, let's create a new Kinesis Data Firehose that will use our Elasticsearch domain as the delivery destination.
+
+<details>
+<summary><strong>Creating a Kinesis Firehose to Elasticsearch Step-By-Step Instructions (expand for details)</strong></summary><p>
 
 1. In the AWS Management Console select **Services** then select **Kinesis** under Analytics.
 
@@ -235,7 +192,7 @@ Now that our ETL Lambda has been created, let's create a new Kinesis Data Fireho
 
 1. Under **Amazon Elasticsearch Service destination**, select our existing cluster for **Domain**.
 
-1. For **Index**, give a name such as `apache`.
+1. For **Index**, enter a name such as `apache`.
 
 1. Select **No rotation** for index rotation frequency and enter a name for **Type** such as `clickstream`.
 
@@ -262,6 +219,8 @@ Now that our ETL Lambda has been created, let's create a new Kinesis Data Fireho
 
 1. Verify that the settings are configured as above, and finish the wizard by selecting **Create delivery stream**. This will take 5-7 min to complete creating the new stream.
 
+</p></details>
+
 
 ## Install Kinesis Agent
 To allow an easier way to parse, process and send the local log files in our web server into our Kinesis Firehose, we can use Kinesis Agent which is a stand-alone Java application to continually monitor a set of files for changes and push the data into the stream. 
@@ -285,6 +244,9 @@ Let's go ahead and SSH into our webserver to install and configure the agent.
 
     1. In the new SSH session, change to root user by entering sudo -s.
     </p></details>
+
+<details>
+<summary><strong>Installing and configuring Kinesis Agent (expand for details)</strong></summary><p>
 
 1. Download and Install the [Kinesis Agent](https://docs.aws.amazon.com/streams/latest/dev/writing-with-agents.html) using the following command. As the EC2 instance has an attached IAM role, you can skip the pre-requisites referring to IAM or AWS credentials (the Agent will do this automatically) in the reference link.
 
@@ -348,13 +310,20 @@ Let's go ahead and SSH into our webserver to install and configure the agent.
 
 1. We can also observe the metrics for our Kinesis Data stream within the Monitoring section within the Kinesis console.
 
+</p></details>
+
 
 ## Using Kibana to visualize Apache Logs
 Now that our plumbing is in place, the workflow will look like this.
 
-![Architecture](images/plumbing_architecture.png)
+![Architecture](images/plumbing.png)
 
-Web Server logs incoming HTTP requests -> Kinesis Agent parses log file and push to Kinesis Firehose -> Integrated Lambda function will ETL the log data and put the transformed data back into the stream -> Kinesis Firehose will deliver the new document into Elasticsearch and update the Index.
+* Web Server logs incoming HTTP requests
+* Kinesis Agent parses log file and push to Kinesis Firehose
+* Lambda function ETLs the log data and puts transformed output into the stream
+* Kinesis Firehose delivers the new document into Elasticsearch and update the Index
+
+## Testing 1
 
 1. Open Kibana dashboard from ES console
 1. click on links
