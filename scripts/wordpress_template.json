@@ -225,7 +225,7 @@
 		"ALBTargetGroup": {
 			"Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
 			"Properties": {
-				"HealthCheckPath": "/wordpress/wp-admin/install.php",
+				"HealthCheckPath": "/wordpress/",
 				"HealthCheckIntervalSeconds": 10,
 				"HealthCheckTimeoutSeconds": 5,
 				"HealthyThresholdCount": 2,
@@ -463,6 +463,12 @@
 							"01_configure_wordpress": {
 								"command": "/tmp/create-wp-config",
 								"cwd": "/var/www/html/wordpress"
+							},
+							"02_workshop_configs1": {
+								"command": "sudo sed -i 's/LogFormat \"%h/LogFormat \"%{X-Forwarded-For}i/g' /etc/httpd/conf/httpd.conf"
+							},
+							"03_workshop_configs2": {
+								"command": "sudo chmod -R 777 /var/log/httpd/"
 							}
 						},
 						"services": {
@@ -524,8 +530,6 @@
 							"mkdir /home/ec2-user/module2\n",
 
 							"mkdir /home/ec2-user/module3\n",
-
-							"sudo chmod -R 777 /var/log/\n",
 
 							"wget https://s3.amazonaws.com/injae-public-download/clickstream.py -P /home/ec2-user/module2/\n",
 
