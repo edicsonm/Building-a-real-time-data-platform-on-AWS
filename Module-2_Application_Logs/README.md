@@ -336,6 +336,9 @@ Finally, you should be able to see the number of Index count increasing within y
 ## Visualizing with Kibana
 In this section, we will use the integrated Kibana dashboard to create a monitoring dashboard of our incoming HTTP requests.
 
+<details>
+<summary><strong>Creating Visuals with Kibana (expand for details)</strong></summary><p>
+
 1. In the AWS Management Console select **Services** then select **Elasticsearch Service** under Analytics.
 
 1. After selecting your ES instance, open the Kibana dashboard by opening the respective URL under **Overview**. If you get an access denied message, verify if your IP address is whitelisted under **Modify access policy**.
@@ -382,6 +385,9 @@ Below are examples of the generated log entries.
 187.1.116.45 - - [30/Oct/2018:05:52:27 +0000] GET categories// HTTP/1.1 500 44439 www.unicornshop.com/home/ Mozilla/5.0 (Linux; U; Android-4.0.3; en-us; Galaxy Nexus Build/IML74K) AppleWebKit/535.7 (KHTML, like Gecko) CrMo/16.0.912.75 Mobile Safari/535.7 user = siskinstemson; PHPSESSID=ac20fe8d26d4463e9fdee50a82829a58
 ```
 
+<details>
+<summary><strong>Using clickstream log generating script (expand for details)</strong></summary><p>
+
 1. SSH into your Wordpress instance
 1. Change into the working directory 
 
@@ -411,7 +417,8 @@ Below are examples of the generated log entries.
 
 1. Whilst the script is running, have a look at your Kibana to see the incoming new data.
 
-
-
-
 </p></details>
+
+## Creating a Monitoring Dashboard on Kibana
+
+1. Import this XXX
