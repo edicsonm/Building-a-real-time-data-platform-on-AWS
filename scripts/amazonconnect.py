@@ -159,7 +159,7 @@ def main():
     #logPath = "/tmp/connect_logs"
 
     with open(logPath, "a") as f:
-        print ("Generating new connect log at {}".format(logPath))
+        print ("Generating new call log at {}".format(logPath))
         json.dump(generate_connectCallLog(),f)
         f.write("\n")
         time.sleep(1)
