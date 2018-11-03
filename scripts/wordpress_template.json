@@ -535,6 +535,10 @@
 
 							"wget https://s3.amazonaws.com/injae-public-download/produce.sh -P /home/ec2-user/module2/\n",
 
+							"wget https://s3.amazonaws.com/injae-public-download/amazonconnect.py -P /home/ec2-user/module3/\n",
+
+							"wget https://s3.amazonaws.com/injae-public-download/produce_connect.sh -P /home/ec2-user/module3/\n",
+
 							"/opt/aws/bin/cfn-init -v ",
 							"         --stack ", {
 								"Ref": "AWS::StackName"
