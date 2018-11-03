@@ -284,7 +284,7 @@ Let's go ahead and SSH into our webserver to install and configure the agent.
         "flows": [
             {
                 "filePattern": "/var/log/httpd/access_log*",
-                "deliveryStream": "clickstreamy",
+                "deliveryStream": "webserver_stream",
                 "partitionKeyOption": "RANDOM",
                 "initialPosition": "START_OF_FILE"       
             }
@@ -323,12 +323,95 @@ Now that our plumbing is in place, the workflow will look like this.
 * Lambda function ETLs the log data and puts transformed output into the stream
 * Kinesis Firehose delivers the new document into Elasticsearch and update the Index
 
-## Testing 1
+And now, let's test our new pipeline by generating some data!
 
-1. Open Kibana dashboard from ES console
-1. click on links
-1. see on kibana
+After ensuring that the aws-kinesis-agent service is running, generate some sample logs by browsing our website. You can find the URL of our Wordpress website by looking at the Outputs section of the WP stack within CloudFormation.
 
-## Testing 2
-1. Generate log script
-1. see on kibana
+![WP_URL](images/Wordpress_URL.png)
+
+If you would like to get a deeper look at what is happening at each stage in our pipeline, some recommendations are to tail the httpd access_log file, Kinesis Firehose Monitoring metrics and Lambda Function's CloudWatch logs.
+
+Finally, you should be able to see the number of Index count increasing within your Elasticsearch under **Indices**.
+
+## Visualizing with Kibana
+In this section, we will use the integrated Kibana dashboard to create a monitoring dashboard of our incoming HTTP requests.
+
+1. In the AWS Management Console select **Services** then select **Elasticsearch Service** under Analytics.
+
+1. After selecting your ES instance, open the Kibana dashboard by opening the respective URL under **Overview**. If you get an access denied message, verify if your IP address is whitelisted under **Modify access policy**.
+
+1. Within Kibana, select **Management** on the left hand panel.
+
+1. Select **Index Patterns**, then **Create Index Pattern**. This will allow us to add our index for Kibana to use as a data source.
+
+1. You should be able to see your Index name such as `apache`. Enter it in **Index pattern** and proceed via **Next Step**.
+
+1. Under **Configure Settings**, use the drop down menu to select **@timestamp**. Back in our ETL Lambda function, we changed the timestamp format to be compatible with Kibana.
+
+1. Finish the wizard by selecting **Create index pattern**. If it is successful, you should be able to see multiple Fields from the incoming data.
+
+1. Take a moment to look at the streaming data by selecting **Discover** on the left hand panel.
+
+1. If you don't see the requests that you generated previously on the website, use the **Auto-refresh** at the top of the page with 5 seconds interval to continually refresh the index.
+
+    *Example*
+    ![Kibana_test1](images/Kibana_test1.png)
+
+1. Try creating your own visualization from the Visualize menu on the left hand panel. For example, if you want to represent number of HTTP response codes:
+
++ Create a new **Pie** chart
++ Select your index that you added previously
++ Under Buckets, select **Split Slices**
++ Select the type **Terms** for Aggregation
++ Use **Field** to add **Response**
++ Apply changes to see the generated visual
++ If you only see 200 responses (from the Load Balancer health check requests), try generating some 404 response by requesting non-existing URL paths on your website.
+
+</p></details>
+
+## Generating Sample Clickstream Data
+To generate clickstream logs that simulate our online unicorn shop, your Wordpress EC2 instance has a python script that can generate sample data into the httpd access_log file.
+
+The script is located under `/home/ec2-user/module2/clickstream.py` and can be continually run using the `produce.sh` script.
+
+Below are examples of the generated log entries.
+
+```shell
+122.57.114.224 - - [30/Oct/2018:05:52:25 +0000] GET home/ HTTP/1.1 200 5708 www.unicornshop.com/products// Mozilla/5.0 (iPad; CPU OS 8_4_1 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12H321 Safari/600.1.4 user = anonymous; PHPSESSID=93fc9aaa09a740c69e64af0e9127f261
+
+187.1.116.45 - - [30/Oct/2018:05:52:27 +0000] GET categories// HTTP/1.1 500 44439 www.unicornshop.com/home/ Mozilla/5.0 (Linux; U; Android-4.0.3; en-us; Galaxy Nexus Build/IML74K) AppleWebKit/535.7 (KHTML, like Gecko) CrMo/16.0.912.75 Mobile Safari/535.7 user = siskinstemson; PHPSESSID=ac20fe8d26d4463e9fdee50a82829a58
+```
+
+1. SSH into your Wordpress instance
+1. Change into the working directory 
+
+    ```shell
+    [ec2-user@ip-172-31-11-210 ~]$ cd module2/
+    [ec2-user@ip-172-31-11-210 module2]$ ls
+    clickstream.py  produce.sh
+    ```
+
+1. Run the shell script, which will continually invoke the python script in a loop.
+
+    ```shell
+    [ec2-user@ip-172-31-11-210 module2]$ . produce.sh 
+    Generating new clickstream log at /var/log/httpd/access_log
+    Press [CTRL+C] to stop..
+    Generating new clickstream log at /var/log/httpd/access_log
+    Press [CTRL+C] to stop..
+    ```
+
+    ```shell
+    [ec2-user@ip-172-31-11-210 module2]$ tail -f /var/log/httpd/access_log 
+
+    162.250.88.82 - - [03/Nov/2018:04:29:26 +0000] "POST home/ HTTP/1.1" 200 20494 "www.unicornshop.com/categories//" "Mozilla/5.0 (Linux; U; Android-4.0.3; en-us; Galaxy Nexus Build/IML74K) AppleWebKit/535.7 (KHTML, like Gecko) CrMo/16.0.912.75 Mobile Safari/535.7" "user = anonymous; PHPSESSID=903f966790f4452e8b695267efe93a99"
+    187.74.103.143 - - [03/Nov/2018:04:29:29 +0000] "GET products/Meeqeos/ HTTP/1.1" 403 37679 "www.unicornshop.com/home/" "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/10.0 Mobile/14E304 Safari/602.1" "user = anonymous; PHPSESSID=2ef5dd310f9c4a2781a9145d190909d5"
+    172.31.4.149 - - [03/Nov/2018:04:29:31 +0000] "GET /wordpress/ HTTP/1.1" 200 55172 "-" "ELB-HealthChecker/2.0"
+    ```
+
+1. Whilst the script is running, have a look at your Kibana to see the incoming new data.
+
+
+
+
+</p></details>
