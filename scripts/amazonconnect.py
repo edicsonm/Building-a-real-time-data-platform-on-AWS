@@ -4,6 +4,9 @@ from datetime import datetime
 from datetime import timedelta 
 import time
 import json
+import boto3
+
+client = boto3.client("firehose", "ap-southeast-2")
 
 def set_userNumber():
     phoneList = [
@@ -155,14 +158,26 @@ def generate_connectCallLog():
 
 
 def main():
-    logPath = "/home/ec2-user/module3/connect_logs"
-    #logPath = "/tmp/connect_logs"
+    data = generate_connectCallLog()
+    data_str = json.dumps(data)
 
-    with open(logPath, "a") as f:
-        print ("Generating new call log at {}".format(logPath))
-        json.dump(generate_connectCallLog(),f)
-        f.write("\n")
-        time.sleep(1)
+    print (">>>>> Generated data >>>>>")
+    print ("")
+    print (data_str)
+    
+    response = client.put_record(
+        DeliveryStreamName = 'json',
+        Record = {
+            'Data': data_str
+        }
+    )
+    print ("")
+    print ("Pushing new record into Kinesis Firehose")
+    print ("")
+    print ("<<<<< KINESIS RESPONSE <<<<<")
+    print (response)
+    print ("")
 
 if __name__ == '__main__':
     main()
+

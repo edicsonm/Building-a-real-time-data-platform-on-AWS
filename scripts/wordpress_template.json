@@ -521,6 +521,8 @@
 
 							"sleep 2\n",
 
+							"sudo /usr/bin/pip-3.6 install boto3\n",
+							
 							"sudo yum install https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm -y\n",
 
 							"sleep 2\n",
