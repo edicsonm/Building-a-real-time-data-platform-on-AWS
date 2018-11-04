@@ -1,0 +1,148 @@
+[
+  {
+    "_id": "9907b1f0-e01a-11e8-bed9-294050ccd919",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Clickstream Apache Dashboard",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"panelIndex\":\"1\",\"gridData\":{\"x\":0,\"y\":0,\"w\":48,\"h\":10,\"i\":\"1\"},\"embeddableConfig\":{},\"id\":\"c7fa0c70-df24-11e8-bed9-294050ccd919\",\"type\":\"visualization\",\"version\":\"6.3.1\"},{\"panelIndex\":\"2\",\"gridData\":{\"x\":0,\"y\":19,\"w\":21,\"h\":11,\"i\":\"2\"},\"embeddableConfig\":{},\"id\":\"b99b0f40-df1e-11e8-bed9-294050ccd919\",\"type\":\"visualization\",\"version\":\"6.3.1\"},{\"panelIndex\":\"3\",\"gridData\":{\"x\":0,\"y\":30,\"w\":21,\"h\":12,\"i\":\"3\"},\"version\":\"6.3.1\",\"type\":\"visualization\",\"id\":\"c9afdc70-e019-11e8-bed9-294050ccd919\",\"embeddableConfig\":{}},{\"panelIndex\":\"5\",\"gridData\":{\"x\":0,\"y\":10,\"w\":34,\"h\":9,\"i\":\"5\"},\"version\":\"6.3.1\",\"type\":\"visualization\",\"id\":\"91eeb510-e017-11e8-bed9-294050ccd919\",\"embeddableConfig\":{}},{\"panelIndex\":\"6\",\"gridData\":{\"x\":21,\"y\":30,\"w\":27,\"h\":12,\"i\":\"6\"},\"version\":\"6.3.1\",\"type\":\"visualization\",\"id\":\"f91c8440-e019-11e8-bed9-294050ccd919\",\"embeddableConfig\":{}},{\"panelIndex\":\"7\",\"gridData\":{\"x\":34,\"y\":10,\"w\":14,\"h\":9,\"i\":\"7\"},\"version\":\"6.3.1\",\"type\":\"visualization\",\"id\":\"18e20c90-e016-11e8-bed9-294050ccd919\",\"embeddableConfig\":{}},{\"panelIndex\":\"8\",\"gridData\":{\"x\":21,\"y\":19,\"w\":27,\"h\":11,\"i\":\"8\"},\"version\":\"6.3.1\",\"type\":\"visualization\",\"id\":\"489373a0-e018-11e8-bed9-294050ccd919\",\"embeddableConfig\":{}}]",
+      "optionsJSON": "{\"darkTheme\":false,\"hidePanelTitles\":false,\"useMargins\":true}",
+      "version": 1,
+      "timeRestore": true,
+      "timeTo": "now",
+      "timeFrom": "now/y",
+      "refreshInterval": {
+        "display": "5 seconds",
+        "pause": false,
+        "section": 1,
+        "value": 5000
+      },
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"query\":{\"language\":\"lucene\",\"query\":\"\"},\"filter\":[],\"highlightAll\":true,\"version\":true}"
+      }
+    },
+    "_meta": {
+      "savedObjectVersion": 2
+    }
+  },
+  {
+    "_id": "c9afdc70-e019-11e8-bed9-294050ccd919",
+    "_type": "visualization",
+    "_source": {
+      "title": "Apache - Access By Verb",
+      "visState": "{\"title\":\"Apache - Access By Verb\",\"type\":\"pie\",\"params\":{\"type\":\"pie\",\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"right\",\"isDonut\":false,\"labels\":{\"show\":true,\"values\":true,\"last_level\":true,\"truncate\":100}},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"segment\",\"params\":{\"field\":\"verb.keyword\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"1\",\"customLabel\":\"Access By Verb\"}}]}",
+      "uiStateJSON": "{\"vis\":{\"colors\":{\"GET\":\"#7EB26D\",\"POST\":\"#447EBC\",\"OPTIONS\":\"#BA43A9\",\"PROPFIND\":\"#806EB7\"},\"legendOpen\":true}}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"a8dbb2e0-df23-11e8-bed9-294050ccd919\",\"filter\":[],\"query\":{\"query\":\"\",\"language\":\"lucene\"}}"
+      }
+    },
+    "_meta": {
+      "savedObjectVersion": 2
+    }
+  },
+  {
+    "_id": "91eeb510-e017-11e8-bed9-294050ccd919",
+    "_type": "visualization",
+    "_source": {
+      "title": "Apache - Top User Agents",
+      "visState": "{\"title\":\"Apache - Top User Agents\",\"type\":\"table\",\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMeticsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":true,\"totalFunc\":\"sum\"},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"user-agent.keyword\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"size\":20,\"order\":\"desc\",\"orderBy\":\"1\",\"customLabel\":\"Top 20 Agent\"}}]}",
+      "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":0,\"direction\":null}}}}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"91883020-df1c-11e8-bed9-294050ccd919\",\"filter\":[],\"query\":{\"query\":\"\",\"language\":\"lucene\"}}"
+      }
+    },
+    "_meta": {
+      "savedObjectVersion": 2
+    }
+  },
+  {
+    "_id": "c7fa0c70-df24-11e8-bed9-294050ccd919",
+    "_type": "visualization",
+    "_source": {
+      "title": "Requests by Page",
+      "visState": "{\"title\":\"Requests by Page\",\"type\":\"metrics\",\"params\":{\"id\":\"61ca57f0-469d-11e7-af02-69e470af7417\",\"type\":\"top_n\",\"series\":[{\"id\":\"61ca57f1-469d-11e7-af02-69e470af7417\",\"color\":\"rgba(103,112,233,1)\",\"split_mode\":\"terms\",\"metrics\":[{\"id\":\"61ca57f2-469d-11e7-af02-69e470af7417\",\"type\":\"count\"}],\"seperate_axis\":0,\"axis_position\":\"right\",\"formatter\":\"number\",\"chart_type\":\"line\",\"line_width\":1,\"point_size\":1,\"fill\":0.5,\"stacked\":\"none\",\"terms_field\":\"request.keyword\",\"label\":\"Page requests\"}],\"time_field\":\"@timestamp\",\"index_pattern\":\"test*\",\"interval\":\"auto\",\"axis_position\":\"left\",\"axis_formatter\":\"number\",\"show_legend\":1,\"show_grid\":1,\"background_color_rules\":[{\"id\":\"7ee34380-df24-11e8-9e95-51bc4bf556f6\"}],\"bar_color_rules\":[{\"id\":\"808de640-df24-11e8-9e95-51bc4bf556f6\"}],\"gauge_color_rules\":[{\"id\":\"829f3a10-df24-11e8-9e95-51bc4bf556f6\"}],\"gauge_width\":10,\"gauge_inner_width\":10,\"gauge_style\":\"half\"},\"aggs\":[]}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{}"
+      }
+    },
+    "_meta": {
+      "savedObjectVersion": 2
+    }
+  },
+  {
+    "_id": "b99b0f40-df1e-11e8-bed9-294050ccd919",
+    "_type": "visualization",
+    "_source": {
+      "title": "Apache - Response by %",
+      "visState": "{\"title\":\"Apache - Response by %\",\"type\":\"pie\",\"params\":{\"type\":\"pie\",\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"right\",\"isDonut\":true,\"labels\":{\"show\":true,\"values\":true,\"last_level\":true,\"truncate\":100}},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{\"customLabel\":\"Response Code Types\"}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"segment\",\"params\":{\"field\":\"response\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"1\",\"customLabel\":\"HTTP Responses\"}}]}",
+      "uiStateJSON": "{\"vis\":{\"colors\":{\"404\":\"#E24D42\"}}}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"91883020-df1c-11e8-bed9-294050ccd919\",\"filter\":[],\"query\":{\"query\":\"\",\"language\":\"lucene\"}}"
+      }
+    },
+    "_meta": {
+      "savedObjectVersion": 2
+    }
+  },
+  {
+    "_id": "489373a0-e018-11e8-bed9-294050ccd919",
+    "_type": "visualization",
+    "_source": {
+      "title": "Apache - Unique Members Login",
+      "visState": "{\"title\":\"Apache - Unique Members Login\",\"type\":\"metric\",\"params\":{\"addTooltip\":true,\"addLegend\":false,\"type\":\"metric\",\"metric\":{\"percentageMode\":false,\"useRanges\":false,\"colorSchema\":\"Green to Red\",\"metricColorMode\":\"None\",\"colorsRange\":[{\"from\":0,\"to\":10000}],\"labels\":{\"show\":true},\"invertColors\":false,\"style\":{\"bgFill\":\"#000\",\"bgColor\":false,\"labelColor\":false,\"subText\":\"\",\"fontSize\":60}}},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"cardinality\",\"schema\":\"metric\",\"params\":{\"field\":\"username.keyword\",\"customLabel\":\"Unique Members Login\"}}]}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"a8dbb2e0-df23-11e8-bed9-294050ccd919\",\"filter\":[],\"query\":{\"query\":\"\",\"language\":\"lucene\"}}"
+      }
+    },
+    "_meta": {
+      "savedObjectVersion": 2
+    }
+  },
+  {
+    "_id": "f91c8440-e019-11e8-bed9-294050ccd919",
+    "_type": "visualization",
+    "_source": {
+      "title": "Apache - Top Users Name",
+      "visState": "{\"title\":\"Apache - Top Users Name\",\"type\":\"pie\",\"params\":{\"type\":\"pie\",\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"right\",\"isDonut\":true,\"labels\":{\"show\":true,\"values\":true,\"last_level\":true,\"truncate\":100}},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"segment\",\"params\":{\"field\":\"username.keyword\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"1\",\"customLabel\":\"Top Users by Name\"}}]}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"a8dbb2e0-df23-11e8-bed9-294050ccd919\",\"filter\":[],\"query\":{\"query\":\"\",\"language\":\"lucene\"}}"
+      }
+    },
+    "_meta": {
+      "savedObjectVersion": 2
+    }
+  },
+  {
+    "_id": "18e20c90-e016-11e8-bed9-294050ccd919",
+    "_type": "visualization",
+    "_source": {
+      "title": "Apache - Total Visitors",
+      "visState": "{\"title\":\"Apache - Total Visitors\",\"type\":\"metric\",\"params\":{\"addTooltip\":true,\"addLegend\":false,\"type\":\"metric\",\"metric\":{\"percentageMode\":false,\"useRanges\":false,\"colorSchema\":\"Green to Red\",\"metricColorMode\":\"None\",\"colorsRange\":[{\"from\":0,\"to\":10000}],\"labels\":{\"show\":true},\"invertColors\":false,\"style\":{\"bgFill\":\"#000\",\"bgColor\":false,\"labelColor\":false,\"subText\":\"\",\"fontSize\":60}}},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{\"customLabel\":\"Apache - Total Visitors\"}}]}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"a8dbb2e0-df23-11e8-bed9-294050ccd919\",\"filter\":[],\"query\":{\"language\":\"lucene\",\"query\":\"\"}}"
+      }
+    },
+    "_meta": {
+      "savedObjectVersion": 2
+    }
+  }
+]
