@@ -420,5 +420,13 @@ Below are examples of the generated log entries.
 </p></details>
 
 ## Creating a Monitoring Dashboard on Kibana
+Lets try importing a dashboard template to see a working example.
 
-1. Import this XXX
+1. Open your Kibana instance and select **Management** located on the left hand panel.
+
+1. Open **Saved Objects** page, then use the **Import** to upload the `clickstream_kibana.json` file (a copy of it is saved in the scripts dir in the git repo).
+
+1. If successful, you should see a new Dashboard under Saved Objects. Click the imported dashboard and select **View dashboard**.
+
+
+### Congratulations! you have now created a real time monitoring dashboard for your web site :)
