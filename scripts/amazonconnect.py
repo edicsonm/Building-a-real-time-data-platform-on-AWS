@@ -6,7 +6,11 @@ import time
 import json
 import boto3
 
-client = boto3.client("firehose", "ap-southeast-2")
+# for syd, region = "ap-southeast-2"
+region = "ap-southeast-2"
+firehoseName = "connect"
+
+client = boto3.client("firehose", region)
 
 def set_userNumber():
     phoneList = [
@@ -99,7 +103,7 @@ def set_startEndTime():
     startTime = datetime.now() - timedelta(days=random.randint(1,30),hours=random.randint(1,24),minutes=random.randint(1,60))
     # end time
     endTime = startTime + timedelta(minutes=random.randint(1,30),seconds=random.randint(1,60))
-    # changing to timestamp format to '2018-10-30T02:24:33Z'
+    # changing to timestamp format to "2018-10-30T02:24:33Z"
     timestampFormat = "%Y-%m-%dT%H:%M:%SZ"
     # return single object with 2 values to unpack later on
     return (startTime.strftime(timestampFormat), endTime.strftime(timestampFormat))
@@ -125,33 +129,34 @@ def set_queue():
 
 def generate_connectCallLog():
     myTime = set_startEndTime()
-    customerObj = {'Address': set_userNumber(), 'Type': 'TELEPHONE_NUMBER'}
+    customerObj = {"Address": set_userNumber(), "Type": "TELEPHONE_NUMBER"}
+    queueObj = {"Duration": random.randint(1,600), "EnqueueTimestamp": myTime[0], "DequeueTimestamp": myTime[1], "ARN": "arn:aws:connect:ap-southeast-2:708252083442:instance/8f1400f1-4492-46a2-85ac-90b2a7a5fdb8", "Name": set_queue()}
 
     callData = {
-        'AWSAccountId': '012345678910',
-        'AWSContactTraceRecordFormatVersion': '2017-03-10',
-        'Agent': set_agentName(),
-        'AgentConnectionAttempts': 1,
-        'Attributes': {},
-        'Channel': 'VOICE',
-        'ConnectedToSystemTimestamp': myTime[0],
-        'ContactId': str(uuid.uuid4()),
-        'CustomerEndpoint': customerObj,
-        'DisconnectTimestamp': myTime[1],
-        'InitialContactId': 'null',
-        'InitiationMethod': 'INBOUND',
-        'InitiationTimestamp': myTime[0],
-        'InstanceARN': 'arn:aws:connect:ap-southeast-2:708252083442:instance/8f1400f1-4492-46a2-85ac-90b2a7a5fdb8',
-        'LastUpdateTimestamp': myTime[1],
-        'MediaStreams': [{'Type': 'AUDIO'}],
-        'NextContactId': 'null',
-        'PreviousContactId': 'null',
-        'Queue': set_queue(),
-        'Recording': 'null',
-        'Recordings': 'null',
-        'SystemEndpoint': {'Address': '+611300395832', 'Type': 'TELEPHONE_NUMBER'},
-        'TransferCompletedTimestamp': 'null',
-        'TransferredToEndpoint': 'null'
+        "AWSAccountId": "012345678910",
+        "AWSContactTraceRecordFormatVersion": "2017-03-10",
+        "Agent": set_agentName(),
+        "AgentConnectionAttempts": 1,
+        "Attributes": {"greetingPlayed": "true"},
+        "Channel": "VOICE",
+        "ConnectedToSystemTimestamp": myTime[0],
+        "ContactId": str(uuid.uuid4()),
+        "CustomerEndpoint": customerObj,
+        "DisconnectTimestamp": myTime[1],
+        "InitialContactId": None,
+        "InitiationMethod": "INBOUND",
+        "InitiationTimestamp": myTime[0],
+        "InstanceARN": "arn:aws:connect:ap-southeast-2:708252083442:instance/8f1400f1-4492-46a2-85ac-90b2a7a5fdb8",
+        "LastUpdateTimestamp": myTime[1],
+        "MediaStreams": [{"Type": "AUDIO"}],
+        "NextContactId": None,
+        "PreviousContactId": None,
+        "Queue": queueObj,
+        "Recording": None,
+        "Recordings": None,
+        "SystemEndpoint": {"Address": "+611300395832", "Type": "TELEPHONE_NUMBER"},
+        "TransferCompletedTimestamp": None,
+        "TransferredToEndpoint": None
     }
 
     return (callData)
@@ -159,6 +164,7 @@ def generate_connectCallLog():
 
 def main():
     data = generate_connectCallLog()
+    print (data)
     data_str = json.dumps(data)
 
     print (">>>>> Generated data >>>>>")
@@ -166,9 +172,9 @@ def main():
     print (data_str)
     
     response = client.put_record(
-        DeliveryStreamName = 'json',
+        DeliveryStreamName = firehoseName,
         Record = {
-            'Data': data_str
+            "Data": data_str
         }
     )
     print ("")
@@ -178,6 +184,6 @@ def main():
     print (response)
     print ("")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 
