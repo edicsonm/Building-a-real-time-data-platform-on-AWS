@@ -1,7 +1,7 @@
 # Module 3. Stream Amazon Connect data in real time with Kinesis and Elasticsearch 
 
 ## Background
-In this module, we will use Amazon's Elastic Search service (Amazon ES) for real-time analytics of contact trace records (CTR) from your Amazon Connect contact center. A detailed list of components used in the solution are as follows:
+In this module, we will use Amazon's Elasticsearch service (Amazon ES) for real-time analytics of contact trace records (CTR) from an Amazon Connect contact center. A detailed list of components used in the solution are as follows:
 
 ### Amazon Connect
 Amazon Connect is a self-service, cloud-based contact center service based on the same contact center technology used by Amazon customer service associates around the world to power millions of customer conversations. There are no up-front payments or long-term commitments and no infrastructure to manage with Amazon Connect; customers pay by the minute for Amazon Connect usage plus any associated telephony services.
@@ -10,16 +10,25 @@ In Amazon Connect, data about contacts, such as the amount of time a contact spe
 ### Amazon Kinesis Firehose
 Amazon Kinesis Data Firehose is the easiest way to reliably load streaming data into data stores and analytics tools. It can capture, transform, and load streaming data into Amazon S3, Amazon Redshift, and Amazon Elasticsearch Service, enabling near real-time analytics with existing business intelligence tools and dashboards you’re already using today. It is a fully managed service that automatically scales to match the throughput of your data and requires no ongoing administration. It can also batch, compress, transform, and encrypt the data before loading it, minimizing the amount of storage used at the destination and increasing security.
 
-## Amazon Lambda
+### Amazon Lambda
 AWS Lambda is a serverless compute service that runs your code in response to events and automatically manages the underlying compute resources for you. You can use AWS Lambda to extend other AWS services with custom logic, or create your own back-end services that operate at AWS scale, performance, and security. 
 
 ### Amazon Elasticsearch and Kibana
 Amazon Elasticsearch Service, is a fully managed service that makes it easy for you to deploy, secure, operate, and scale Elasticsearch to search, analyze, and visualize data in real-time. With Amazon Elasticsearch Service you get easy-to-use APIs and real-time analytics capabilities to power use-cases such as log analytics, full-text search, application monitoring, and clickstream analytics, with enterprise-grade availability, scalability, and security. The service offers integrations with open-source tools like Kibana that provide data visualization and exploration capabilities.
 
 ## Lab Architecture 
+![alt text](architecture.png "Logo Title Text 1")
 
+### Workflow
+1. A user calls the Amazon Connect call center and navigates the touch tone menu.
+2. Amazon Connect generates a Contact Trace Record and places it in the Kinesis Firehose stream.
+3. A lambda function is invoked to detect the name of the caller based on the phone number and ammend the CTR.
+4. The ammended CTR is delivered to Elasticsearch.
 
 ## Pre-requisites
+A number of components from modules 1 and 2 will be used in this module. Specifically:
+- The Amazon Elasticsearch Cluster
+- The Wordpress EC2 instance
 
 ## Implementation Instructions
 Each of the following sections provides an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.
@@ -30,7 +39,7 @@ If you're using the latest version of the Chrome, Firefox, or Safari web browser
 All labs will be performed in the AWS <span style="color:red">**Sydney (ap-southeast-2)**</span> region.
 
 ### 1. Create an Amazon Connect Instance
-To begin, we need to provision an Amazon connect instance. Once provisioned, you can edit the settings for it, which include telephony, data storage, data streaming, application integration, and contact flows. 
+To begin, we need to provision an Amazon Connect instance. Once provisioned, you can edit the settings for it, which include telephony, data storage, data streaming, application integration, and contact flows. 
 
 #### High-Level Instructions
 Use the console or AWS CLI to provision Amazon Connect. 
@@ -63,11 +72,29 @@ The name that you enter is displayed as the instance alias in the AWS Management
 
 9. After your instance is created, choose **Get started** to claim and test a phone number. Amazon Connect automatically configures your instance to use the phone number that you select.
 
+---
+**NOTE**
+
+If you get an error when clicking **Get started**, wait a few minutes and try again. It can take a few minutes for the instance to complete the provisioning process. 
+
+---
+
+10. Once the Connect page has loaded, select **Let's go** to get started.
+
+11. For **Claim phone number**, select the following:
+- **Country**: Australia
+- **Type**: Toll Free
+- **Phone Number**: Select one from the drop down box
+
+12. Select **Next** to continue.
+
+13. Test the phone number by calling it from your mobile.
+
 </p></details>
 
 
 ### 2. Create Lambda Transformation Function
-As we stream our Contact Trace Records from Amazon Connect to Kinesis, we need to transform the records to look up the incoming phone number and append the caller name to the record, prior to delivering to Elasticsearch. The transformation will be performed by a Lambda function that will be invoked by Kinesis Firehose to trasform incoming data.
+As we stream our Contact Trace Records from Amazon Connect to Elasticsearch via Kinesis, we need to transform the records to look up the incoming phone number and append the caller name to the record. The transformation will be performed by a Lambda function that will be invoked by Kinesis Firehose to trasform incoming data.
 
 #### High-Level Instructions
 Use the console or AWS CLI to create a python Lambda function from the kinesis-firehose-process-record-python blueprint. The required code to perform the transformation is in the step-by-step instructions below. 
@@ -117,6 +144,8 @@ def lambda_handler(event, context):
         jsonPayload["CustomerEndpoint"]["Name"] = response.text
         stringPayload = json.dumps(jsonPayload)
         
+        print(stringPayload)
+
         output_record = {
             'recordId': record['recordId'],
             'result': 'Ok',
@@ -193,9 +222,7 @@ Use the console or AWS CLI to create a Kinesis Firehose stream to transform your
 
 5. Choose **Next** to go to the Transform records page.
 
-6. On the **Transform records with AWS Lambda** page, provide values for the following fields:
-
-- Under **Record transformation** choose **Enabled** and specify the Lambda function created in the previous step.
+6. Under **Transform source records with AWS Lambda** choose **Enabled** for **Record transformation** and specify the Lambda function created in the previous step.
 
 7. Choose **Next** to go to the Choose destination page.
 
@@ -203,7 +230,7 @@ Use the console or AWS CLI to create a Kinesis Firehose stream to transform your
 
 - Under **Destination** choose **Amazon Elasticsearch Service**.
 - Under **Domain** choose the Amazon ES domain created in the previous module.
-- Under **Index** enter `Connect`.
+- Under **Index** enter `connect`.
 - Under **Index rotation** choose **No rotation**.
 - Under **Type** enter `CTR`
 - Under **Retry duration** enter 1
@@ -221,11 +248,11 @@ Use the console or AWS CLI to create a Kinesis Firehose stream to transform your
 
 10. Click **Next** then review the settings and choose **Create Delivery Stream**.
 
-The new Kinesis Data Firehose delivery stream takes a few moments in the Creating state before it is available. After your Kinesis Data Firehose delivery stream is in an Active state, you can start sending data to it from your producer.
+The new Kinesis Data Firehose delivery stream takes a few moments in the creating state before it is available. After your Kinesis Data Firehose delivery stream is in an active state, you can start sending data to it from your producer (Amazon Connect).
 
 </details>
 
-### 4. Configure AWSAmazon Connect to deliver CTRs to Elasticsearch via Kinesis Firehose
+### 4. Configure AWS Amazon Connect to deliver CTRs to Elasticsearch via Kinesis Firehose
 Now that our Kinesis Firehose delivery stream has been configured, we need to configure Amazon Connect to send Contact Trace Records to our stream to be delivered to Elasticsearch.
 
 #### High-Level Instructions
@@ -242,7 +269,7 @@ Configure Amazon Connect to send its CTRs to the Kinesis Firehose delivery strea
 
 4. Choose **Enable data streaming**.
 
-5. Select **Kinesis Data Firehose**, and then select the Kinesis Data Firehose stream created in the previous step from the resource in the drop-down list.
+5. Select **Kinesis Firehose**, and then select the Kinesis Firehose stream created in the previous step from the resource in the drop-down list.
 
 6. Choose **Save**.
 
@@ -282,5 +309,12 @@ It may take a few minutes for the Cloudwatch and Elasticsearch to show metrics o
 8. Select **ConnectedToSystemTimestamp** and from the **Time Filter field name** dropdown box and select **Create index pattern**.
 
 9. Navigate to **Discover** on the left side of the page and search the `Connect` index. 
+
+10. Because we are unable to easily generate large call volumes, a simulation script has been created to send dummy CTRs to Kinesis. To run this script, perform the following:
+- Log onto the WordPress EC2 instance
+- Navigate to the `module3` directory
+- Run `produce_connect.sh`
+
+11. Navigate back to kibana and ensure the records are showing. Ensure that the Time Range is set in the top righthand corner to pick up records for the past month. 
 
 </details>
