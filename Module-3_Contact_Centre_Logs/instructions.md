@@ -275,7 +275,7 @@ Configure Amazon Connect to send its CTRs to the Kinesis Firehose delivery strea
 
 </details>
 
-### 4. Test delivery of Call Trace Records to Elasticsearch
+### 5. Test delivery of Call Trace Records to Elasticsearch
 Now that everything's been set up and configured, Call Trace Records should be delivered directly to Elasticsearch. 
 
 #### High-Level Instructions
