@@ -11,7 +11,7 @@
 In the first part of this module, we will create a monitoring dashboard to gain visibility into the operational health of our infrastructure for EC2 and RDS instance. By surfacing these metrics, we can detect potential problems earlier on to spot capacity failures, and gain insights on demand pattern for time series analysis and cost savings through elasticity.
 
 
-In the second part of this module, we will use AWS WAF to log incoming HTTP requests and use a ruleset to observe Blocked and Allowed requests in Kibana and Elasticsearch. 
+In the second part of this module, we will use AWS WAF to log incoming HTTP requests and use a ruleset to observe BLOCKED and ALLOWED requests in Kibana and Elasticsearch. 
 
 For our working environment, we will use a 2-tier Wordpress Site running on EC2 and Amazon RDS for MySQL DB. Scroll down to get started!
 
@@ -67,7 +67,7 @@ With data being generated from multiple different sources, we need a way to sear
 
 1. In the AWS Management Console select **Services** then select **Elasticsearch Service** under Analytics.
 
-1. In the service console, select **Create a new domain**
+1. In the service console, select **Create a new domain**.
 
 1. Under **Domain Name** enter a name for your cluster and ensure that the selected **Version** is **6.3**. Proceed to the **Next** step.
 
@@ -218,8 +218,31 @@ To ingest the streaming log data from our WAF, we can use [Amazon Kinesis Fireho
 </p></details>
 
 # Visualizing Log Data with Kibana
-Now that we WAF logs
+Now that we have captured WAF logs for both BLOCKED and ALLOWED requests in our Elasticsearch, let's create a monitoring dashboard to visualize our data.
 
+<details>
+<summary><strong>Visualizing WAF Logs in Kibana Step-By-Step Instructions (expand for details)</strong></summary><p>
+
+
+1. Access your Kibana dashboard through your Elasticsearch domain.
+
+1. Within Kibana, add your new WAF index by selecting **Management** on the left hand panel.
+
+1. Select **Index Patterns**, then **Create Index Pattern**. This will allow us to add our index for Kibana to use as a data source.
+
+1. You should be able to see your Index name `awswaf`. Enter it in **Index pattern** and proceed via **Next Step**. If successful, you should be able to see the fields mapping and the respective data types.
+
+1. To view the logs, select the **Discover** tab in the left hand menu
+
+1. Ensure that the data source is set to `awswaf` Index in the drop down menu. If successful, you should now be able to see the WAF logs. (If you don't see any data or new logs coming in, try increasing the Time Range and set the Auto-Refresh interval to 5 seconds)
+
+1. Use the Search field or the values in Available Fields to explore the data
+
+1. Go ahead and create some Visuals using this Index using the **Visualize** tab on the left hand menu. For example, you can graph the geographic location of the HTTP requests' origin by creating a new **Region Map** type, using the following data fields.
+
+![](images/Kibana_Country.png)
+
+</p></details>
 
 ## [Optional] RDS Logs to Elasticsearch
 With Enhanced Monitoring enabled for Amazon RDS instance, the service publishes metrics for your DB instance to CloudWatch Logs. As this has been already enabled for your RDS environment via CloudFormation, try to find `RDSOSMetrics` in your CloudWatch Log Group and stream it into your Elasticsearch as an additional data source. For configuring Log Format, you should use **JSON** for compatibility with ES.
