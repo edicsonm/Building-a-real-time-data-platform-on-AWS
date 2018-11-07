@@ -8,18 +8,24 @@
 1. Health Dashboard on ES (CPU/Memory/DiskQueueLength/DatabaseConnections/FreeStorageSpace)
 
 ## Introduction
-In this module, we will create a monitoring dashboard to gain visiblity into the operational health of our infrastructure. By surfacing these metrics, we can detect potential problems earlier on to spot capacity failures, and gain insights on demand pattern for time series analysis and cost savings through elasticity. We will also use AWS WAF to log incoming HTTP requests and create a rule to observe Blocked and Allowed requests through CloudWatch Logs and Kibana on Elasticsearch. 
+In this module, we will create a monitoring dashboard to gain visibility into the operational health of our infrastructure. By surfacing these metrics, we can detect potential problems earlier on to spot capacity failures, and gain insights on demand pattern for time series analysis and cost savings through elasticity. We will also use AWS WAF to log incoming HTTP requests and create a rule to observe Blocked and Allowed requests through CloudWatch Logs and Kibana on Elasticsearch. 
 
-
+For our working environment, we will use a 2-tier Wordpress Site running on EC2 and Amazon RDS for MySQL DB. Scroll down to get started!
 
 ## Architecture
 ![Module_1_Architecture1](images/Module1_Architecture1.png)
 ![Module_1_Architecture2](images/Module1_Architecture2.png)
 
+## Creating our Wordpress Environment
+CloudFormation instructions
+
+
 ## Setting up CloudWatch Agent
+We do this because there are metrics for EC2 instance that are not visible at the hypervisor level such as Memory and Disk free space. If we were to run in an hybrid environment, we can use CloudWatch Agent for on-premises servers as well.
+
 
 ## CloudWatch Dashboard
-
+Create a Dashboard through CloudWatch as it has integration with our Metrics. If we wanted to run our CloudWatch Dashboard outside of AWS Console, here is a [blog article](https://aws.amazon.com/blogs/devops/building-an-amazon-cloudwatch-dashboard-outside-of-the-aws-management-console/)
 
 
 ## Creating a Kinesis Firehose
