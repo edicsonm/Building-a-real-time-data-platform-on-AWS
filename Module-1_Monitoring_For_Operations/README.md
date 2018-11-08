@@ -4,12 +4,12 @@
 
 </p>
 
-## Introduction
+# Introduction
 In the first part of this module, we will create a monitoring dashboard to gain visibility into the operational health of our infrastructure for EC2 and RDS instance. By surfacing these metrics, we can detect potential problems earlier on to spot capacity failures, and gain insights on demand pattern for time series analysis and cost savings through elasticity.
 
 In the second part of this module, we will use AWS WAF on our Application Load Balancer to log incoming HTTP requests and use a ruleset to observe BLOCKED and ALLOWED requests in Kibana and Elasticsearch. 
 
-## Architecture
+# Architecture
 
 #### Monitoring Infrastructure through CloudWatch Metrics and Dashboards
 ![Module_1_Architecture1](images/Module1_Architecture1.png)
@@ -109,7 +109,7 @@ Detailed instructions can be [found here](https://docs.aws.amazon.com/AmazonClou
 1. Download the CloudWatch Agent using the following command.
 
 	``` shell
-	https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
+	wget https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
 	```
 
 1. Install the package. If you downloaded an RPM package on a Linux server, change to the directory containing the package and type the following:
@@ -261,7 +261,7 @@ Now that we have all of our metrics available to use, we can create a dashboard 
 	+ Create a new **Line** graph widget
 	+ Select **RDS**, then **Per-Database Metrics**
 	+ Use your DB Instance ID (you can find it in CloudFormation's Resource tab) to filter
-	+ Some useful metrics include **DatabaseConnection** (to avoid max concurrent connections), **CPUUtilization**, **FreeableMemory** (DB's are often memory constrained) and **DiskQueueDepth** (bad when we can't flush to disk fast enough causing slow writes).
+	+ Some useful metrics include **DatabaseConnections** (to avoid max concurrent connections), **CPUUtilization**, **FreeableMemory** (DB's are often memory constrained) and **DiskQueueDepth** (bad when we can't flush to disk fast enough causing slow writes).
 
 
 	Example Dashboard
@@ -277,12 +277,6 @@ Using CloudWatch logs, we can publish additional type of data such as Windows ev
 
 To help protect our web application, we can leverage AWS WAF to implement a Layer 7 firewall to protect against web exploits such as Cross Site Scripting or SQL Injection attacks. In this module, we will be creating a new rule that blocks a certain IP address to simulate an enforced rule and see it amongst other successful HTTP requests in Kibana.
 
-
-<details>
-<summary><strong>Creating a new AWS WAF Step-By-Step Instructions (expand for details)</strong></summary><p>
-
-</p></details>
-
 ## 1. Storing, Indexing and Searching Data with an Amazon Elasticsearch cluster
 With data being generated from multiple different sources, we need a way to search, analyze and visualize it to extract meaningful information and insights. To enable this, we can use Amazon Elasticsearch, a fully managed service that helps with the deployment, operations and scaling the open source Elasticsearch engine. Using the integrated Kibana tool, we can create custom visualizations and dashboards to enable us to make faster and more informed decisions about our environment!
 
@@ -293,7 +287,7 @@ With data being generated from multiple different sources, we need a way to sear
 
 1. In the service console, select **Create a new domain**.
 
-1. Under **Domain Name** enter a name for your cluster and ensure that the selected **Version** is **6.3**. Proceed to the **Next** step.
+1. Under **Domain Name** enter a name for your cluster such as `realtime` and ensure that the selected **Version** is **6.3**. Proceed to the **Next** step.
 
 1. In this page, we can configure the number of nodes and HA settings for our Elasticsearch cluster. We will use the default single node setting, but for production environments, you would use multiple nodes across different availability zones using the **zone awareness** setting. Continue by leaving all settings as-is under **Configure cluster** and proceed to the **Next** step. 
 
@@ -325,7 +319,7 @@ With data being generated from multiple different sources, we need a way to sear
         				]
         			}
         		},
-        		"Resource": "arn:aws:es:ap-southeast-1:708252083442:domain/realtimeworkshop/*"
+        		"Resource": "arn:aws:es:ap-southeast-1:708252083442:domain/realtime/*"
         	}]
         }
     ```
@@ -339,10 +333,10 @@ With data being generated from multiple different sources, we need a way to sear
 
 1. With your Kibana environment, use the **Dev Tools** tab in the left panel menu to apply a new template.
 
-1. Change the first line of the template following PUT  _template/, with the name of your ES domain. For example, if we named our ES domain `myLabES`, we would use the following template.
+1. Change the first line of the template following PUT  _template/, with the name of your ES domain. For example, if we named our ES domain `realtime`, we would use the following template.
 
 	```JSON
-	PUT  _template/myLabES
+	PUT  _template/realtime
 	{
 		"index_patterns": ["awswaf"],
 		"settings": {
@@ -372,11 +366,19 @@ With data being generated from multiple different sources, we need a way to sear
 	}
 	}
 	```
-	* To break down the sections of the applied template, this sends an API call to our Elasticsearch domain as identified by `PUT  _template/myLabES` with the following JSON configuration.
+	* To break down the sections of the applied template, this sends an API call to our Elasticsearch domain as identified by `PUT  _template/realtime` with the following JSON configuration.
 	
 	* It identifies the index we've used to be `awswaf`, and uses a single Elasticsearch shard for the index. For a deep dive on sizing your Shards, please see [this blog](https://aws.amazon.com/blogs/database/get-started-with-amazon-elasticsearch-service-how-many-shards-do-i-need/).
 
 	* The pattern template is defining two fields from the logs. It will indicate to Elasticsearch that the httpRequest.clientIp field is using an IP address format and that the timestamp field is represented in epoch time. All the other log fields will be classified automatically.
+
+1. If the template applies successfully, you should see a JSON response like below
+
+	```json
+	{
+		"acknowledged": true
+	}
+	```
 
 1. Congratulations, you've configured your Elasticsearch domain for our workshop modules.
 
@@ -384,7 +386,6 @@ With data being generated from multiple different sources, we need a way to sear
 
 ## 2. Ingesting Streaming Data with Kinesis Firehose
 To ingest the streaming log data from our WAF, we can use [Amazon Kinesis Firehose](https://aws.amazon.com/kinesis/data-firehose/) to automatically ingest and deliver data into our Elasticsearch domain as the destination. We will be using the native integration for web ACL logging with Firehose as [prescribed here](https://docs.aws.amazon.com/waf/latest/developerguide/logging.html).
-
 
 <details>
 <summary><strong>Creating a Kinesis Firehose to Elasticsearch Step-By-Step Instructions (expand for details)</strong></summary><p>
@@ -409,11 +410,11 @@ To ingest the streaming log data from our WAF, we can use [Amazon Kinesis Fireho
 
 1. Under **Amazon Elasticsearch Service destination**, select our existing cluster for **Domain**.
 
-1. For **Index**, use `awswaf` as the index name. To match the index pattern template we applied in Kibana earlier.
+1. For **Index**, use `awswaf` as the index name to match the index pattern template we applied in Kibana earlier.
 
 1. Select **No rotation** for index rotation frequency and use `waflog` as the name for **Type**. 
 
-	# INSERT PICTURE
+	<img src="images/Firehose_ES_config1.png">
 
 1. Under **S3 backup**, we can select whether a copy of the records from our Firehose is automatically backed up into an S3 bucket, or only for records that fails to be processed. For this workshop, select **All records** to view the data later on to have a look at the ingested data.
 
@@ -421,7 +422,7 @@ To ingest the streaming log data from our WAF, we can use [Amazon Kinesis Fireho
 
 1. Your settings should look similar to this
 
-	# INSERT PICTURE
+	<img src="images/Firehose_ES_config2.png">
 
 1. Proceed to the next page by selecting **Next**.
 
@@ -441,7 +442,75 @@ To ingest the streaming log data from our WAF, we can use [Amazon Kinesis Fireho
 
 </p></details>
 
-## 3. Visualizing Log Data with Kibana
+## 3. Using AWS WAF to protect web apps and log HTTP requests
+As a quick recap for part 2 of the module on what we've done so far:
+
++ We have an Elasticsearch domain to serve as our data store and search engine
++ We have a Kinesis Firehose that is used to ingest and automatically deliver (and update index) for our Elasticsearch
++ Our Kibana is applying pattern template to transform timestamp from epoch format to a more friendly timestamp
+
+Now, let's create a new WAF for our Application Load Balancer and generate some sample data!
+
+<details>
+<summary><strong>Creating a new AWS WAF Step-By-Step Instructions (expand for details)</strong></summary><p>
+
+1. In the AWS Management Console select **Services** then select **WAF & Shield** under Security, Identity & Compliance.
+
+1. In the service console, select **Go to AWS WAF**.
+
+1. Select **Configure web ACL** to create our first ACL.
+
+1. Have a look through the Concepts overview page to see how WAF works and proceed by selecting **Next**.
+
+1. Give your Web ACL a name and change the **Region** to **Asia Pacific (Sydney)**. We're using a regional WAF as it will be used with an Application Load Balancer. Alternatively, CloudFront can be used if regional WAF is not available in your region of choice.
+
+1. Select **Application load balancer** for **Resource type to associate with web ACL**. This should list the ALB that was created through CloudFormation.
+
+1. In **Create conditions**, we can select a number of different turnkey conditions such as SQL injection, XSS and Geo Match to block requests matching these conditions.
+
+1. For testing, we will be using **IP match conditions** to simulate a BLOCKED request. Select **Create condition** to bring up a new creation window.
+
+1. Give your new condition a name and check that **IP Version** is set to **IPv4**.
+
+1. Enter your current IP address in a CIDR format such as **54.240.193.1/32**. To find out your public IP address, you can use google and search for "Whats my IP".
+
+1. Add it as a new filter by selecting **Add IP address or range**. You should be able to see a new filter for the IP address being added.
+
+1. Finish creating the new condition by selecting **Create**.
+
+1. Back in the WAF ACL wizard, proceed to the next page (Create rules) by selecting **Next**.
+
+	<img src="images/WAF_IPCondition.png">
+
+1. Now that we have a new condition, create a new rule to add to our Web ACL by selecting **Create rule**.
+
+1. In the new rule window, give your rule a name and choose **Regular rule** for **Rule type**. If we wanted to implement a rule based on number of requests (eg. potential DDoS), **Rate-based rule** would be a good choice.
+
+1. In **Add Conditions**, use the drop down menu to select the IP block condition we created previously.
+
+	<img src="images/WAF_Rule.png">
+
+1. Finish creating the rule by selecting **Create**.
+
+1. Finally, choose the **Corresponding** action to block if our condition is met ie. certain IP address, and have the default action to **Allow all requests that doesn't match rules** to accept other requests.
+
+	<img src="images/WAF_FinalConfig.png">
+
+1. Finish the rest of the Wizard by selecting **Review and Create**.
+
+</p></details>
+
+<details>
+<summary><strong>Testing the WAF Step-By-Step Instructions (expand for details)</strong></summary><p>
+Now that our WAF is turned on and associated with our ALB, try accessing the WebsiteURL (can be found in Outputs tab of CloudFormation).
+
+If the WAF works successfully, you should now see a 403 Forbidden response when requesting the website.
+
+To access your website and generate ACCEPTED requests in WAF logs, use an alternative connection by tethering your mobile phone or by removing your ALB as a resource associated with the WAF Web ACL.
+
+</p></details>
+
+## 4. Visualizing Log Data with Kibana
 Now that we have captured WAF logs for both BLOCKED and ALLOWED requests in our Elasticsearch, let's create a monitoring dashboard to visualize our data.
 
 <details>
@@ -464,7 +533,7 @@ Now that we have captured WAF logs for both BLOCKED and ALLOWED requests in our 
 
 1. Go ahead and create some Visuals using this Index using the **Visualize** tab on the left hand menu. For example, you can graph the geographic location of the HTTP requests' origin by creating a new **Region Map** type, using the following data fields.
 
-![](images/Kibana_Country.png)
+	<img src="images/Kibana_Country.png">
 
 </p></details>
 
