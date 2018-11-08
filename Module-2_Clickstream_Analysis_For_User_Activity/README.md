@@ -1,4 +1,4 @@
-# Module 2: 
+# Module 2: Clickstream Analysis for User Activity
 
 ## Introduction
 In this Module, we will explore how we can surface clickstream logs within our Web Server to power a visualization dashboard on Kibana. By collecting and analyzing these data, we can build up user behaviour profiles as they browse our unicorn store and derive insights on customer behaviour.
@@ -425,6 +425,8 @@ Lets try importing a dashboard template to see a working example.
 1. Open your Kibana instance and select **Management** located on the left hand panel.
 
 1. Open **Saved Objects** page, then use the **Import** to upload the `clickstream_kibana.json` file (a copy of it is saved in the scripts dir in the git repo).
+
+1. If prompted to Automatically overwrite all saved objects? Select **Yes, overwrite all objects**.
 
 1. If successful, you should see a new Dashboard under Saved Objects. Click the imported dashboard and select **View dashboard**.
 

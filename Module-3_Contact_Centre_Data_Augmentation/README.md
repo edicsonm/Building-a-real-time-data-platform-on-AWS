@@ -1,4 +1,4 @@
-# Module 3. Stream Amazon Connect data in real time with Kinesis and Elasticsearch 
+# Module 3. Augmenting User Behaviour Profiles with Contact Centre Data
 
 ## Background
 In this module, we will use Amazon's Elasticsearch service (Amazon ES) for real-time analytics of contact trace records (CTR) from an Amazon Connect contact center. A detailed list of components used in the solution are as follows:

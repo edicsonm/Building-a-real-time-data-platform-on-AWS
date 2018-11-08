@@ -1,11 +1,4 @@
-# Module 1:
-
-1. Launch CloudFormation template (2 tier wordpress on EC2 and RDS)
-1. Set up CloudWatch Agent for memory and Disk
-1. CloudWatch Dashboard
-
-1. CloudWatch Logs and ElasticSearch
-1. Health Dashboard on ES (CPU/Memory/DiskQueueLength/DatabaseConnections/FreeStorageSpace)
+# Module 1: Monitoring for Operations
 
 ## Introduction
 In the first part of this module, we will create a monitoring dashboard to gain visibility into the operational health of our infrastructure for EC2 and RDS instance. By surfacing these metrics, we can detect potential problems earlier on to spot capacity failures, and gain insights on demand pattern for time series analysis and cost savings through elasticity.
@@ -70,11 +63,13 @@ Now that we have our SSH key, create a new web app stack using the following ins
 
 1. In the final **Review** page, check the "I acknowledge that AWS CloudFormation.." and launch the stack by selecting **Create**. The reason for requiring this confirmation is because our template creates a new IAM role and attaches it to the EC2 instance. This is required as we will be using the AWS APIs, where the [instance's IAM role will automatically generate and vend temporary credentials](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html).
 
+1. The stack will take 10-12 min to create and will show `CREATE_COMPLETE` for the status when it's ready.
+
 </p></details>
 
 
 # Monitoring Infrastructure through CloudWatch Metrics and Dashboards
-Comment about EC2 and RDS, and why cloudwatch agent required
+Now that our Web App environment is up and running, 
 
 ## Setting up CloudWatch Agent
 We do this because there are metrics for EC2 instance that are not visible at the hypervisor level such as Memory and Disk free space. If we were to run in an hybrid environment, we can use CloudWatch Agent for on-premises servers as well.
