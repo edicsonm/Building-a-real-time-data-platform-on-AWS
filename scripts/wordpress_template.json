@@ -466,9 +466,6 @@
 							},
 							"02_workshop_configs1": {
 								"command": "sudo sed -i 's/LogFormat \"%h/LogFormat \"%{X-Forwarded-For}i/g' /etc/httpd/conf/httpd.conf"
-							},
-							"03_workshop_configs2": {
-								"command": "sudo chmod -R 777 /var/log/httpd/"
 							}
 						},
 						"services": {
