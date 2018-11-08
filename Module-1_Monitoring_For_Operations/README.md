@@ -518,7 +518,10 @@ To test the WAF in action, try accessing the WebsiteURL (can be found in Outputs
 
 If the WAF works successfully, you should now see a 403 Forbidden response when requesting the website.
 
-To access your website and generate ACCEPTED requests in WAF logs, use an alternative connection by tethering your mobile phone or by removing your ALB as a resource associated with the WAF Web ACL.
+To access your website and generate ACCEPTED requests in WAF logs, use an alternative connection by tethering your mobile phone. If you remove your ALB as an associated resource, you will **not** generate WAF logs.
+Once you've generated enough sample data and want to restore back, remove your ALB as a resource associated with the WAF Web ACL by selecting the Rules tab for your Web ACL.
+
+If you try to access Kibana, you will see access denied unless you've whitelisted your tethering IP address.
 
 </p></details>
 
@@ -535,7 +538,9 @@ Now that we have captured WAF logs for both BLOCKED and ALLOWED requests in our 
 
 1. Select **Index Patterns**, then **Create Index Pattern**. This will allow us to add our index for Kibana to use as a data source.
 
-1. You should be able to see your Index name `awswaf`. Enter it in **Index pattern** and proceed via **Next Step**. If successful, you should be able to see the fields mapping and the respective data types.
+1. You should be able to see your Index name `awswaf`. Enter it in **Index pattern** and proceed via **Next Step**.
+
+1. In **Step 2 of 2: Configure Settings**, use the drop down menu to select **timestamp** (result of template transform from epoch to datetime). Finish the proces by selecting **Create Index Pattern**. If successful, you should be able to see the fields mapping and the respective data types.
 
 1. To view the logs, select the **Discover** tab in the left hand menu
 
@@ -546,6 +551,8 @@ Now that we have captured WAF logs for both BLOCKED and ALLOWED requests in our 
 1. Go ahead and create some Visuals using this Index using the **Visualize** tab on the left hand menu. For example, you can graph the geographic location of the HTTP requests' origin by creating a new **Region Map** type, using the following data fields.
 
 	<img src="images/Kibana_Country.png">
+
+	<img src="images/Kibana_Allow_Block.png">
 
 </p></details>
 
