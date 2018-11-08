@@ -263,6 +263,10 @@ Now that we have all of our metrics available to use, we can create a dashboard 
 	+ Use your DB Instance ID (you can find it in CloudFormation's Resource tab) to filter
 	+ Some useful metrics include **DatabaseConnection** (to avoid max concurrent connections), **CPUUtilization**, **FreeableMemory** (DB's are often memory constrained) and **DiskQueueDepth** (bad when we can't flush to disk fast enough causing slow writes).
 
+
+	Example Dashboard
+	<img src="images/CWDashboard.png">
+
 </p></details>
 
 
