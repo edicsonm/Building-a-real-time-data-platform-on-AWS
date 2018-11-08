@@ -317,6 +317,42 @@ It may take a few minutes for the Cloudwatch and Elasticsearch to show metrics o
 - Navigate to the `module3` directory
 - Run `produce_connect.sh`
 
-11. Navigate back to kibana and ensure the records are showing. Ensure that the Time Range is set in the top righthand corner to pick up records for the past month. 
+11. Navigate back to kibana and ensure the records are showing under **Discover**. Ensure that the Time Range is set in the top righthand corner to pick up records for the past month. 
+
+</details>
+
+### 6. create a visualization for CTR data in Kibana
+Now that the data is being sent to Elasticsearch, it's time to create a simple visualisation to gain insights into the collected data. 
+
+#### High-Level Instructions
+Create a visualisation that displays the number of calls received by Amazon Connect per day.
+
+<details>
+<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+
+1. From the left-hand navigation menu, choose **Visualize**.
+
+2. Click the “+” symbol to create a new visualization.
+
+3. Under **Data**, choose **Data Table**.
+
+4. Select `connect*` from **Select Index**.
+
+5. Under **Metrics**, expand **Metrics** and provide the following parameters:
+- **Aggregation:** Unique Count
+- **Field:** ContactId.keyword
+- **Custom Label:** Calls
+
+6. Under **Buckets**, choose **Split Rows** and provide the following parameters:
+- **Aggregation:** Date Histogram
+- **Field:** LastUpdateTimestamp
+- **Interval:** Daily
+- **Custom Label:** Date
+
+7. To apply changes, choose the **Play** button.
+
+8. From the top ribbon menu, choose **Save**.
+
+9. Give your visualization a name and choose **Save**.
 
 </details>
