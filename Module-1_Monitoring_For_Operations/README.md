@@ -1,11 +1,16 @@
 # Module 1: Monitoring for Operations
 
+<p>
+
+</p>
+
 ## Introduction
 In the first part of this module, we will create a monitoring dashboard to gain visibility into the operational health of our infrastructure for EC2 and RDS instance. By surfacing these metrics, we can detect potential problems earlier on to spot capacity failures, and gain insights on demand pattern for time series analysis and cost savings through elasticity.
 
 In the second part of this module, we will use AWS WAF on our Application Load Balancer to log incoming HTTP requests and use a ruleset to observe BLOCKED and ALLOWED requests in Kibana and Elasticsearch. 
 
 ## Architecture
+
 #### Monitoring Infrastructure through CloudWatch Metrics and Dashboards
 ![Module_1_Architecture1](images/Module1_Architecture1.png)
 #### Monitoring web requests through AWS WAF
@@ -13,11 +18,12 @@ In the second part of this module, we will use AWS WAF on our Application Load B
 
 
 # Creating a Wordpress Web App Environment
-For our working environment, we will use a 2-tier Wordpress LAMP stack running on EC2 and MySQL on Amazon RDS. A CloudFormation template has been provided for this workshop, which will automatically create this environment for the labs. As it takes about 10-12 min to create the stack, feel free to view the template while waiting.
+For our working environment, we will use a 2-tier Wordpress LAMP stack running on EC2 and MySQL on Amazon RDS. The EC2 instance is created with an IAM role attached, and bootstrapped with the SSM agent installed in user-data.
+A CloudFormation template has been provided for this workshop, which will automatically create this environment for the labs. As it takes about 10-12 min to create the stack, feel free to view the template while waiting.
 
 `Please verify that you are using the Sydney region in the console before proceeding!`
 
-## Creating a new EC2 Key Pair
+## 1. Creating a new EC2 Key Pair
 To SSH into our Web App EC2 instance, you will need to create and register a new key on AWS. We will use this later on during CloudFormation launch wizard to associate the key with the EC2 instance.
 
 <details>
@@ -30,7 +36,7 @@ To SSH into our Web App EC2 instance, you will need to create and register a new
 1. Select **Create Key Pair** and give your Key a name. Your browser should automatically download the .pem file (you will need this later on!)
 </p></details>
 
-## Launching Web App Stack through CloudFormation
+## 2. Launching Web App Stack through CloudFormation
 Now that we have our SSH key, create a new web app stack using the following instructions.
 
 <details>
@@ -57,7 +63,7 @@ Now that we have our SSH key, create a new web app stack using the following ins
 
 1. Select the default (only) VPC for **VpcId** and proceed by selecting **Next**.
 
-	[CloudFormation](images/CloudFormation.png)
+	<img src="images/CloudFormation.png">
 
 1. Leave the **Options** configuration as is, and proceed by selecting **Next**.
 
@@ -67,27 +73,197 @@ Now that we have our SSH key, create a new web app stack using the following ins
 
 </p></details>
 
+## 3. Complete First time Wordpress Setup
+Now that our Wordpress stack has been brought up, finish the installation by accessing your WebsiteURL. You can find the address by **selecting your CloudFormation stack**, then viewing the **Outputs** tab.
+
 
 # Monitoring Infrastructure through CloudWatch Metrics and Dashboards
-Now that our Web App environment is up and running, 
+Now that our Web App environment is up and running, we can start capturing and surfacing our performance metrics for monitoring. By default, metrics for CPU Utilization, NetworkIn/Out and Disk IOPS are available through CloudWatch automatically. However, there are other types of key metrics such as Memory Utilization and Disk Space Utilization which are not visible from the hypervisor for EC2. To monitor these, we will need to use an Agent based solution such as CloudWatch Agent to expose them for monitoring.
 
-## Setting up CloudWatch Agent
-We do this because there are metrics for EC2 instance that are not visible at the hypervisor level such as Memory and Disk free space. If we were to run in an hybrid environment, we can use CloudWatch Agent for on-premises servers as well.
+## 1. Setting up CloudWatch Agent
+To set up CloudWatch, we will need to SSH into our instance and download/install the CloudWatch Agent package. Once we install the agent, we will need to set the configuration to tell the Agent what metrics it should capture.
+Detailed instructions can be [found here](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/install-CloudWatch-Agent-on-first-instance.html). As the EC2 instance already has the SSM agent installed and an IAM role associated with sufficient permissions, you can skip these sections.
+
 
 <details>
 <summary><strong>Setting up CloudWatch Agent on EC2 Step-By-Step Instructions (expand for details)</strong></summary><p>
 
+1. Connect to your EC2 instance using the SSH key you created earlier in this module.
+
+1. If you have an SSH client such as Putty on Windows or Terminal on Mac, use this to connect to your EC2 instance. If you don't have an SSH client, you can create a new session online through the AWS Console using the Systems Manager service.
+
+    <details>
+    <summary><strong>SSH session through Systems Manager (expand for details)</strong></summary><p>
+
+    [Reference link](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-sessions-start.html)
+
+    1. In the AWS Management Console select **Services** then select **Systems Manager** under Management Tools.
+
+    1. In the service console, select **Session Manager** from the left hand panel and select **Start Session** to list target instances.
+
+    1. You should be able to see our web server instance. Select the instance and open a new SSH session window by selecting **Start Session**.
+
+    1. In the new SSH session, change to root user by entering sudo -s.
+    </p></details>
+
+1. Download the CloudWatch Agent using the following command.
+
+	``` shell
+	https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
+	```
+
+1. Install the package. If you downloaded an RPM package on a Linux server, change to the directory containing the package and type the following:
+
+	``` shell
+	sudo rpm -U ./amazon-cloudwatch-agent.rpm
+	```
+
+1. Whether you are installing the CloudWatch agent on an Amazon EC2 instance or an on-premises server, you must create the CloudWatch agent configuration file before starting the agent. The agent configuration file is a JSON file that specifies the metrics and logs that the agent is to collect, including custom metrics. **Create the config file by using the wizard using the following**
+
+	``` shell
+	sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-config-wizard
+	```
+
+1. Use the following menu choices to configure CloudWatch. If you make a mistake, you can start the wizard again.
+To deploy this at scale, you would use the Wizard one time to generate the config files, and deploy this across your instances.
+
+	<details>
+	<summary><strong>CW Agent Wizard Menu (expand for details)</strong></summary><p>
+	<table>
+    <tbody>
+        <tr>
+            <td>Item</td>
+            <td>Question</td>
+            <td>Answer</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>On which OS are you planning to use the agent?</td>
+            <td>1. Linux</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Are you using EC2 or On-Premises hosts?</td>
+            <td>1. EC2</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Do you want to turn on StatsD daemon?</td>
+            <td>2. No</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>Do you want to monitor metrics from CollectD?</td>
+            <td>2. No</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>Do you want to monitor any host metrics? e.g. CPU, memory, etc.</td>
+            <td>1. Yes</td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <td>Do you want to monitor cpu metrics per core?</td>
+            <td>2. No</td>
+        </tr>
+        <tr>
+            <td>7</td>
+            <td>Do you want to add ec2 dimensions (ImageId, InstanceId, InstanceType, AutoScalingGroupName) into all of your metrics if the info is available?</td>
+            <td>2. No</td>
+        </tr>
+        <tr>
+            <td>8</td>
+            <td>Would you like to collect your metrics at high resolution (sub-minute resolution)?</td>
+            <td>1. 1s</td>
+        </tr>
+        <tr>
+            <td>9</td>
+            <td>Which default metrics config do you want?</td>
+            <td>2. Standard</td>
+        </tr>
+        <tr>
+            <td>10</td>
+            <td>Are you satisfied with the above config?</td>
+            <td>1. Yes</td>
+        </tr>
+        <tr>
+            <td>11</td>
+            <td>Do you have any existing CloudWatch Log Agent?</td>
+            <td>2. No</td>
+        </tr>
+        <tr>
+            <td>12</td>
+            <td>Do you want to monitor any log files?</td>
+            <td>2. No</td>
+        </tr>
+        <tr>
+            <td>13</td>
+            <td>Do you want to store the config in the SSM parameter store?</td>
+            <td>1. Yes</td>
+        </tr>
+        <tr>
+            <td>14</td>
+            <td>What parameter store name do you want to use to store your config?</td>
+            <td>Default choice (or AmazonCloudWatch-linux)</td>
+        </tr>
+        <tr>
+            <td>15</td>
+            <td>Which region do you want to store the config in the parameter store?</td>
+            <td>Default choice (or ap-southeast-2)</td>
+        </tr>
+        <tr>
+            <td>16</td>
+            <td>Which AWS credential should be used to send json config to parameter store?</td>
+            <td>Default choice (or temp credentials starting with ASIA)</td>
+        </tr>
+		</tbody>
+	</table>
+	</p></details>
+
+1. Start the Agent by using the following command. Note that we use our Configuration file stored in SSM using the `-c` flag.
+
+	``` shell
+	sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c ssm:AmazonCloudWatch-linux -s
+	```
+
+1. If successful, you should be able to see the process entering a **running** state.
+
+	<img src="images/cloudwatch.png">
+
+
 </p></details>
 
 
-## CloudWatch Dashboard
-Create a Dashboard through CloudWatch as it has integration with our Metrics. If we wanted to run our CloudWatch Dashboard outside of AWS Console, here is a [blog article](https://aws.amazon.com/blogs/devops/building-an-amazon-cloudwatch-dashboard-outside-of-the-aws-management-console/)
+## 2. Visualizing with CloudWatch Dashboard
+
+Now that we have all of our metrics available to use, we can create a dashboard using CloudWatch by adding these as widgets. If we wanted to run our CloudWatch Dashboard outside of AWS Console, here is a [blog article](https://aws.amazon.com/blogs/devops/building-an-amazon-cloudwatch-dashboard-outside-of-the-aws-management-console/) that details the process.
 
 <details>
 <summary><strong>Creating a new CloudWatch Dashboard Step-By-Step Instructions (expand for details)</strong></summary><p>
 
-</p></details>
+1. In the AWS Management Console select **Services** then select **CloudWatch** under Management Tools.
 
+1. In the service console, select **Dashboards** on the left hand menu and **Create dashboard**.
+
+1. You can add our CloudWatch metrics (including Memory and Disk) by adding widgets. Try adding a few different widgets into our dashboard (see below examples).
+
+1. For monitoring EC2 CPU Utilization and amount of Memory used:
+	+ Create a new **Line** graph widget
+	+ Select **CWAgent** and open **host**
+	+ Select **mem_used_percent** for the host (by default, private IP address of EC2 instance)
+	+ For CPU Utilization, add another widget using the Line graph type
+	+ Select **EC2**, then **Per-Instance Metrics**
+	+ Use your instance ID and select **CPU Utilization**
+
+	`Fun Fact`: Using tools such as top or sysstat (Task Manager in Windows) for monitoring CPU utilization is not accurate as it will show metrics for the underlying hypervisor, not your guest VM. As such, you will often see a discrepency between OS level metrics and CloudWatch. This is perfectly normal in a multi-tenant environment such as the cloud. For the curious, here is a link [describing CPU Steal in action](https://www.datadoghq.com/blog/understanding-aws-stolen-cpu-and-how-it-affects-your-apps/) (note its not actually stealing!).
+
+1. For monitoring RDS Database metrics:
+	+ Create a new **Line** graph widget
+	+ Select **RDS**, then **Per-Database Metrics**
+	+ Use your DB Instance ID (you can find it in CloudFormation's Resource tab) to filter
+	+ Some useful metrics include **DatabaseConnection** (to avoid max concurrent connections), **CPUUtilization**, **FreeableMemory** (DB's are often memory constrained) and **DiskQueueDepth** (bad when we can't flush to disk fast enough causing slow writes).
+
+</p></details>
 
 
 # Monitoring Web Requests through AWS WAF
@@ -103,7 +279,7 @@ To help protect our web application, we can leverage AWS WAF to implement a Laye
 
 </p></details>
 
-## Storing, Indexing and Searching Data with an Amazon Elasticsearch cluster
+## 1. Storing, Indexing and Searching Data with an Amazon Elasticsearch cluster
 With data being generated from multiple different sources, we need a way to search, analyze and visualize it to extract meaningful information and insights. To enable this, we can use Amazon Elasticsearch, a fully managed service that helps with the deployment, operations and scaling the open source Elasticsearch engine. Using the integrated Kibana tool, we can create custom visualizations and dashboards to enable us to make faster and more informed decisions about our environment!
 
 <details>
@@ -202,7 +378,7 @@ With data being generated from multiple different sources, we need a way to sear
 
 </p></details>
 
-## Ingesting Streaming Data with Kinesis Firehose
+## 2. Ingesting Streaming Data with Kinesis Firehose
 To ingest the streaming log data from our WAF, we can use [Amazon Kinesis Firehose](https://aws.amazon.com/kinesis/data-firehose/) to automatically ingest and deliver data into our Elasticsearch domain as the destination. We will be using the native integration for web ACL logging with Firehose as [prescribed here](https://docs.aws.amazon.com/waf/latest/developerguide/logging.html).
 
 
@@ -261,7 +437,7 @@ To ingest the streaming log data from our WAF, we can use [Amazon Kinesis Fireho
 
 </p></details>
 
-# Visualizing Log Data with Kibana
+## 3. Visualizing Log Data with Kibana
 Now that we have captured WAF logs for both BLOCKED and ALLOWED requests in our Elasticsearch, let's create a monitoring dashboard to visualize our data.
 
 <details>
