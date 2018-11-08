@@ -57,7 +57,7 @@ Now that we have our SSH key, create a new web app stack using the following ins
 
 1. Select the default (only) VPC for **VpcId** and proceed by selecting **Next**.
 
-[CloudFormation](images/CloudFormation.png)
+	[CloudFormation](images/CloudFormation.png)
 
 1. Leave the **Options** configuration as is, and proceed by selecting **Next**.
 
