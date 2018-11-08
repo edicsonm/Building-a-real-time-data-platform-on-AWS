@@ -10,10 +10,7 @@
 ## Introduction
 In the first part of this module, we will create a monitoring dashboard to gain visibility into the operational health of our infrastructure for EC2 and RDS instance. By surfacing these metrics, we can detect potential problems earlier on to spot capacity failures, and gain insights on demand pattern for time series analysis and cost savings through elasticity.
 
-
-In the second part of this module, we will use AWS WAF to log incoming HTTP requests and use a ruleset to observe BLOCKED and ALLOWED requests in Kibana and Elasticsearch. 
-
-For our working environment, we will use a 2-tier Wordpress Site running on EC2 and Amazon RDS for MySQL DB. Scroll down to get started!
+In the second part of this module, we will use AWS WAF on our Application Load Balancer to log incoming HTTP requests and use a ruleset to observe BLOCKED and ALLOWED requests in Kibana and Elasticsearch. 
 
 ## Architecture
 #### Monitoring Infrastructure through CloudWatch Metrics and Dashboards
@@ -21,8 +18,60 @@ For our working environment, we will use a 2-tier Wordpress Site running on EC2 
 #### Monitoring web requests through AWS WAF
 ![Module_1_Architecture2](images/Module1_Architecture2.png)
 
-# Creating our Wordpress Environment
-CloudFormation instructions
+
+# Creating a Wordpress Web App Environment
+For our working environment, we will use a 2-tier Wordpress LAMP stack running on EC2 and MySQL on Amazon RDS. A CloudFormation template has been provided for this workshop, which will automatically create this environment for the labs. As it takes about 10-12 min to create the stack, feel free to view the template while waiting.
+
+`Please verify that you are using the Sydney region in the console before proceeding!`
+
+## Creating a new EC2 Key Pair
+To SSH into our Web App EC2 instance, you will need to create and register a new key on AWS. We will use this later on during CloudFormation launch wizard to associate the key with the EC2 instance.
+
+<details>
+<summary><strong>Creating a new EC2 Key Pair Step-By-Step Instructions (expand for details)</strong></summary><p>
+
+1. In the AWS Management Console select **Services** then select **EC2** under Compute.
+
+1. In the service console, select **Key Pairs** on the left hand menu.
+
+1. Select **Create Key Pair** and give your Key a name. Your browser should automatically download the .pem file (you will need this later on!)
+</p></details>
+
+## Launching Web App Stack through CloudFormation
+Now that we have our SSH key, create a new web app stack using the following instructions.
+
+<details>
+<summary><strong>Launching Wordpress Web App Environment Step-By-Step Instructions (expand for details)</strong></summary><p>
+
+1. In the AWS Management Console select **Services** then select **CloudFormation** under Management Tools.
+
+1. In the service console, select **Create Stack**.
+
+1. Under **Choose a template**, select **Specify an Amazon S3 template URL** then use the following for the S3 location of the template.
+	``` shell
+	https://s3.amazonaws.com/injae-public-download/wordpress_template.json
+	```
+
+1. Proceed to the next screen by selecting **Next**.
+
+1. Give your stack a name such as `myStack`.
+
+1. **For Parameters**, populate the missing values for **DBPassword, DBUser and KeyName**(using what we made previously).
+
+1. For **SSHLocation**, you can use 0.0.0.0/0 to allow your EC2's Security Group to accept connections from Port 22. However in practice, you would restrict the IP address to a small known range such as your Corporate network. 
+
+1. In **Subnets**, you should be able to see 3 x different subnets. **Select any 2 x Subnets only**. Our Application Load Balancer will use these two subnets for a HA configuration across multiple Availability Zones.
+
+1. Select the default (only) VPC for **VpcId** and proceed by selecting **Next**.
+
+[CloudFormation](images/CloudFormation.png)
+
+1. Leave the **Options** configuration as is, and proceed by selecting **Next**.
+
+1. In the final **Review** page, check the "I acknowledge that AWS CloudFormation.." and launch the stack by selecting **Create**. The reason for requiring this confirmation is because our template creates a new IAM role and attaches it to the EC2 instance. This is required as we will be using the AWS APIs, where the [instance's IAM role will automatically generate and vend temporary credentials](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html).
+
+</p></details>
+
 
 # Monitoring Infrastructure through CloudWatch Metrics and Dashboards
 Comment about EC2 and RDS, and why cloudwatch agent required
