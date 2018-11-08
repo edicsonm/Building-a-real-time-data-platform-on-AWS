@@ -501,8 +501,20 @@ Now, let's create a new WAF for our Application Load Balancer and generate some 
 </p></details>
 
 <details>
+<summary><strong>Enabling WAF Logging Step-By-Step Instructions (expand for details)</strong></summary><p>
+Now that our WAF ACL has been configured with the Rule and Condition, we need to enable Logging to our Kinesis Firehose.
+
+1. Select your Web ACL and select **Enable Logging** in the  **Logging** tab.
+
+1. In the new window, select your Kinesis Firehose (e.g. aws-waf-logs-lab) and select **Create**.
+
+1. Let's go to the next section to test your newly created WAF.
+
+</p></details>
+
+<details>
 <summary><strong>Testing the WAF Step-By-Step Instructions (expand for details)</strong></summary><p>
-Now that our WAF is turned on and associated with our ALB, try accessing the WebsiteURL (can be found in Outputs tab of CloudFormation).
+To test the WAF in action, try accessing the WebsiteURL (can be found in Outputs tab of CloudFormation).
 
 If the WAF works successfully, you should now see a 403 Forbidden response when requesting the website.
 
