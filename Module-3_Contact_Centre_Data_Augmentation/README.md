@@ -348,7 +348,7 @@ Call the Amazon Connect call centre you set up in step 1, and observe the Kinesi
 
 </details>
 
-## 6. Create a visualisation for CTR data in Kibana
+## 6. Creating Visualisation for CTR data in Kibana
 Now that the data is being sent to Elasticsearch, it's time to create a simple visualisation to gain insights into the collected data. 
 
 #### High-Level Instructions
@@ -389,7 +389,7 @@ Create a visualisation that displays the number of calls received by Amazon Conn
 Although we have created 3 x different Index patterns for WAF logs, Clickstream logs and CTR logs respectively, we can combine them together in Elasticsearch to create an aggregated data set.
 By doing this, we can get a single pane view on how our customer behaved on our website, as well as any previous calls that they have made.
 
-Combining different customer channels can be a powerful as it can help build a much more robust picture of a customer and provide insights on how they interact across our channels.
+Combining different customer channels can be a powerful tool as it can help build a much more robust picture of a customer by providing insights on how they interact across our channels.
 
 <details>
 <summary><strong>Aggregating Data sources with Step-by-step instructions (expand for details)</strong></summary><p>
