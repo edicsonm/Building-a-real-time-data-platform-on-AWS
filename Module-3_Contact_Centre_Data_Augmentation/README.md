@@ -331,6 +331,7 @@ Call the Amazon Connect call center you set up in step 1, and observe the Kinesi
   region = "ap-southeast-2"
   firehoseName = "<YOUR_CONNECT_STREAM>"
   ```
+
 1. Run the simulation script `produce_connect.sh` 
   
     ``` shell
@@ -344,9 +345,6 @@ Call the Amazon Connect call center you set up in step 1, and observe the Kinesi
 1. Navigate back to kibana and ensure the records are showing under **Discover**. Ensure that the Time Range is set in the top righthand corner to pick up records for the past month. 
 
 </details>
-
-Optional
-
 
 ## 6. Create a visualization for CTR data in Kibana
 Now that the data is being sent to Elasticsearch, it's time to create a simple visualisation to gain insights into the collected data. 
