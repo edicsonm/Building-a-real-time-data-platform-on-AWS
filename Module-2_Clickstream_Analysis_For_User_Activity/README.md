@@ -1,7 +1,7 @@
 # Module 2: Clickstream Analysis for User Activity
 
 # Introduction
-In this Module, we will explore how we can surface clickstream logs within our Web Server to power a visualization dashboard on Kibana. By collecting and analyzing these data, we can build up user behaviour profiles as they browse our unicorn store and derive insights on customer behaviour.
+In this Module, we will explore how we can surface clickstream logs within our Web Server to power a visualisation dashboard on Kibana. By collecting and analyzing these data, we can build up user behaviour profiles as they browse our unicorn store and derive insights on customer behaviour.
 
 # Architecture
 ![Module_2_Architecture](images/Module_2_infrastructure.png)
@@ -377,7 +377,7 @@ In this section, we will use the integrated Kibana dashboard to create a monitor
     *Example*
     ![Kibana_test1](images/Kibana_test1.png)
 
-1. Try creating your own visualization from the Visualize menu on the left hand panel. For example, if you want to represent number of HTTP response codes:
+1. Try creating your own visualisation from the Visualize menu on the left hand panel. For example, if you want to represent number of HTTP response codes:
 
 + Create a new **Pie** chart
 + Select your index that you added previously
@@ -460,4 +460,4 @@ Alternatively, you can import a dashboard template to see a working example.
 
 # Other Applications of Clickstream Analysis Data
 
-In this Module, we covered how we can start exploring our data through building visualization. Although this is a great first step in understanding our data and gaining insights, you can also leverage other downstream applications such as Machine Learning or other forms of analytics such as Data Warehousing or something more real-time to power upstream platforms and applications.
+In this Module, we covered how we can start exploring our data through building visualisation. Although this is a great first step in understanding our data and gaining insights, you can also leverage other downstream applications such as Machine Learning or other forms of analytics such as Data Warehousing or something more real-time to power upstream platforms and applications.
