@@ -439,7 +439,9 @@ Below are examples of the generated log entries.
 </p></details>
 
 ## 3. Creating a Clickstream Dashboard on Kibana
-Lets try importing a dashboard template to see a working example.
+Try creating your own visuals using the newly added Index containing the clickstream sample data.
+
+Alternatively, you can import a dashboard template to see a working example.
 
 1. Open your Kibana instance and select **Management** located on the left hand panel.
 
@@ -447,7 +449,13 @@ Lets try importing a dashboard template to see a working example.
 
 1. If prompted to Automatically overwrite all saved objects? Select **Yes, overwrite all objects**.
 
+1. If you have named your Index other than `apache`, you may be prompted to replace *Apache* with your own clickstream Index name.
+
 1. If successful, you should see a new Dashboard under Saved Objects. Click the imported dashboard and select **View dashboard**.
+
+    *Example*
+
+    ![Kibana_Dashboard](images/Kibana_Dashboard.png)
 
 
 # Other Applications of Clickstream Analysis Data
