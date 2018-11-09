@@ -384,7 +384,38 @@ Create a visualisation that displays the number of calls received by Amazon Conn
 
 </details>
 
+## 7. Combining Clickstream and CTR data for user profile
+
+Although we have created 3 x different Index patterns for WAF logs, Clickstream logs and CTR logs respectively, we can combine them together in Elasticsearch to create an aggregated data set.
+By doing this, we can get a single pane view on how our customer behaved on our website, as well as any previous calls that they have made.
+
+Combining different customer channels can be a powerful as it can help build a much more robust picture of a customer and provide insights on how they interact across our channels.
+
+<details>
+<summary><strong>Aggregating Data sources with Step-by-step instructions (expand for details)</strong></summary><p>
+
+1. Within Kibana, use the **Management** tab and select **Index Patterns**.
+
+1. You should be able to see 3 x existing Indexes. Let's create our 4th aggregate Index by selecting **Create Index Pattern**.
+
+1. For index pattern, use `*` (wildcard) to match all existing indexes.
+
+1. For the **Time Filter** name, use the drop down menu for **I don't want to use the Time Filter**. If we wanted to use this as a filter, additional ETL is required in the Connect Firehose's transformation Lambda to use the same key name (@timestamp).
+
+1. Finish creating the Index by selecting **Create Index Pattern**.
+
+1. Back in the **Discover** tab, try searching for a username such as `brooklyncriminal` to retrieve all history across clickstream and call histories.
+
+  <img src="images/Kibana_combined.png">
+
+</details>
+
 # Other Applications of Data aggregation (or building a data lake)
 By being able to join different data sets together using a common field (eg. username, timestamp), we can gain additional insights into the behaviour of our customers and group similar profiles together. Through this mechanism, we can enable business outcomes such as targeted marketing, recommendation engines (collaborative filtering) to identifying topics to train our staff upon if we see a heavy bias towards a particular area.
 
 If we were to add additional sources of data such as customer purchase or sales history or an ERP system containing Inventory count into a real time data pipeline, this can unlock further business outcomes or identify new opportunities by correlation and discovering trends in the aggregate. 
+
+For the curious, below are some self-paced labs on building your first data pipeline, data lake and data warehousing:
+
+https://github.com/saltysoup/data-lake-workshop
+https://github.com/saltysoup/redshift-workshop
