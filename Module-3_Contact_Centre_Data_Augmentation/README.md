@@ -319,13 +319,29 @@ Call the Amazon Connect call center you set up in step 1, and observe the Kinesi
   + Change to the working directory with the following command
     ``` shell
     cd /home/ec2-user/module3
-    ```
-  + Run `produce_connect.sh`
+
+1. Open the amazonconnect.py script and change the value for `firehoseName` with the name of your Kinesis Firehose name.
+
+  ``` shell
+  vim amazonconnect.py
+  ```
+
+  ``` python
+  # for syd, region = "ap-southeast-2"
+  region = "ap-southeast-2"
+  firehoseName = "<YOUR_CONNECT_STREAM>"
+  ```
+1. Run the simulation script `produce_connect.sh` 
+  
     ``` shell
     . produce_connect.sh
     ```
 
-11. Navigate back to kibana and ensure the records are showing under **Discover**. Ensure that the Time Range is set in the top righthand corner to pick up records for the past month. 
+1. If sucessful, you should be abl to see output similar to this
+
+  <img src="images/connectscript.png">
+
+1. Navigate back to kibana and ensure the records are showing under **Discover**. Ensure that the Time Range is set in the top righthand corner to pick up records for the past month. 
 
 </details>
 
