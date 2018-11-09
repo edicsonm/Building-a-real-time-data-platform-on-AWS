@@ -297,6 +297,7 @@ With data being generated from multiple different sources, we need a way to sear
 
 1. Enter your current IP address in the pop up window (you can find out your current public address by googling "Whats my IP"). This should automatically generate an access policy in JSON like below, where my public IP address is 54.240.193.1.
 
+	*Example*
     ```json
         {
         	"Version": "2012-10-17",
