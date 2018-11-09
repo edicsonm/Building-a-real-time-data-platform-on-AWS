@@ -6,9 +6,9 @@ import time
 import json
 import boto3
 
-# for syd, region = "ap-southeast-2"
+# change value for firehoseName with your Connect stream's name e.g. CTRFHStream
 region = "ap-southeast-2"
-firehoseName = "connect"
+firehoseName = "<YOUR_CONNECT_STREAM>"
 
 client = boto3.client("firehose", region)
 
