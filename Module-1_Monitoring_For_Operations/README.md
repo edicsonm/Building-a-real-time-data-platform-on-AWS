@@ -1,9 +1,5 @@
 # Module 1: Monitoring for Operations
 
-<p>
-
-</p>
-
 # Introduction
 In the first part of this module, we will create a monitoring dashboard to gain visibility into the operational health of our infrastructure for EC2 and RDS instance. By surfacing these metrics, we can detect potential problems earlier on to spot capacity failures, and gain insights on demand pattern for time series analysis and cost savings through elasticity.
 
@@ -434,8 +430,6 @@ To ingest the streaming log data from our WAF, we can use [Amazon Kinesis Fireho
 
 1. Under **IAM Role**, select **Create new or choose** to bring up a new IAM role creation page. Under IAM Role, use the drop down menu to select **Create a new IAM Role**. This will automatically generate the permissions required for our Firehose to use the configured settings for CloudWatch, S3, Lambda and ElasticSearch.
 
-    ![Firehose_ES](images/Firehose_IAM.png)
-
 1. Proceed to the next step by selecting **Allow**.
 
 1. Verify that the settings are configured as above, and finish the wizard by selecting **Create delivery stream**. This will take 3-5 min to complete creating the new stream.
@@ -518,10 +512,9 @@ To test the WAF in action, try accessing the WebsiteURL (can be found in Outputs
 
 If the WAF works successfully, you should now see a 403 Forbidden response when requesting the website.
 
-To access your website and generate ACCEPTED requests in WAF logs, use an alternative connection by tethering your mobile phone. If you remove your ALB as an associated resource, you will **not** generate WAF logs.
-Once you've generated enough sample data and want to restore back, remove your ALB as a resource associated with the WAF Web ACL by selecting the Rules tab for your Web ACL.
+To access your website and generate ACCEPTED requests in WAF logs, you can edit your web ACL to remove the associated rule, or use an alternative (IP address) connection by tethering your mobile phone. If you remove your ALB as an associated resource, you will **not** generate WAF logs.
 
-If you try to access Kibana, you will see access denied unless you've whitelisted your tethering IP address.
+Note: If you try to access Kibana with alternative connection, you will see access denied unless you've whitelisted your new tethering IP address.
 
 </p></details>
 
@@ -542,11 +535,11 @@ Now that we have captured WAF logs for both BLOCKED and ALLOWED requests in our 
 
 1. In **Step 2 of 2: Configure Settings**, use the drop down menu to select **timestamp** (result of template transform from epoch to datetime). Finish the proces by selecting **Create Index Pattern**. If successful, you should be able to see the fields mapping and the respective data types.
 
-1. To view the logs, select the **Discover** tab in the left hand menu
+1. To view the logs, select the **Discover** tab in the left hand menu.
 
-1. Ensure that the data source is set to `awswaf` Index in the drop down menu. If successful, you should now be able to see the WAF logs. (If you don't see any data or new logs coming in, try increasing the Time Range and set the Auto-Refresh interval to 5 seconds)
+1. Ensure that the data source is set to `awswaf` Index in the drop down menu. If successful, you should now be able to see the WAF logs. (If you don't see any data or new logs coming in, try increasing the Time Range and set the Auto-Refresh interval to 5 seconds).
 
-1. Use the Search field or the values in Available Fields to explore the data
+1. Use the Search field or the values in Available Fields to explore the data.
 
 1. Go ahead and create some Visuals using this Index using the **Visualize** tab on the left hand menu. For example, you can graph the geographic location of the HTTP requests' origin by creating a new **Region Map** type, using the following data fields.
 
