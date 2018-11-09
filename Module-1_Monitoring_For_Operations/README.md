@@ -315,7 +315,7 @@ With data being generated from multiple different sources, we need a way to sear
         				]
         			}
         		},
-        		"Resource": "arn:aws:es:ap-southeast-2:<ACCOUNTID:domain/<ES_NAME>/*"
+        		"Resource": "arn:aws:es:ap-southeast-2:<ACCOUNTID>:domain/<ES_NAME>/*"
         	}]
         }
     ```
