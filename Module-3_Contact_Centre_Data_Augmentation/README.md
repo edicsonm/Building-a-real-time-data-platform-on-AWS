@@ -17,7 +17,7 @@ AWS Lambda is a serverless compute service that runs your code in response to ev
 Amazon Elasticsearch Service, is a fully managed service that makes it easy for you to deploy, secure, operate, and scale Elasticsearch to search, analyze, and visualize data in real-time. With Amazon Elasticsearch Service you get easy-to-use APIs and real-time analytics capabilities to power use-cases such as log analytics, full-text search, application monitoring, and clickstream analytics, with enterprise-grade availability, scalability, and security. The service offers integrations with open-source tools like Kibana that provide data visualization and exploration capabilities.
 
 ## Lab Architecture 
-![alt text](architecture.png "Logo Title Text 1")
+![alt text](images/architecture.png "Logo Title Text 1")
 
 ### Workflow
 1. A user calls the Amazon Connect call center and navigates the touch tone menu.
