@@ -317,9 +317,15 @@ Let's go ahead and SSH into our webserver to install and configure the agent.
 
 1. Now that the agent has started, we can observe the Agent log file to see if it picks up the apache request logs and send it to our Kinesis Firehose.
 
+    ```shell
+    tail -f /var/log/aws-kinesis-agent/aws-kinesis-agent.log
+    ```
+
     ![KinesisAgent_log](images/KinesisAgent_log.png)
 
 1. We can also observe the metrics for our Kinesis Data stream within the Monitoring section within the Kinesis console.
+
+`Don't forget to edit your web ACL to remove the IP Block rule for WAF if you've completed Module 1`
 
 </p></details>
 
@@ -403,7 +409,7 @@ Below are examples of the generated log entries.
 1. Change into the working directory 
 
     ```shell
-    [ec2-user@ip-172-31-11-210 ~]$ cd module2/
+    [ec2-user@ip-172-31-11-210 ~]$ cd /home/ec2-user/module2
     [ec2-user@ip-172-31-11-210 module2]$ ls
     clickstream.py  produce.sh
     ```
@@ -426,7 +432,9 @@ Below are examples of the generated log entries.
     172.31.4.149 - - [03/Nov/2018:04:29:31 +0000] "GET /wordpress/ HTTP/1.1" 200 55172 "-" "ELB-HealthChecker/2.0"
     ```
 
-1. Whilst the script is running, have a look at your Kibana to see the incoming new data.
+1. Whilst the script is running, have a look at your Kibana to see the incoming new data in the **Discover** page.
+
+`For this workshop, it's recommended to change the Time Range to a smaller window such as Last 1 hour`
 
 </p></details>
 
@@ -442,4 +450,6 @@ Lets try importing a dashboard template to see a working example.
 1. If successful, you should see a new Dashboard under Saved Objects. Click the imported dashboard and select **View dashboard**.
 
 
-### Congratulations! you have now created a real-time data dashboard for your web site :)
+# Other Applications of Clickstream Analysis Data
+
+In this Module, we covered how we can start exploring our data through building visualization. Although this is a great first step in understanding our data and gaining insights, you can also leverage other downstream applications such as Machine Learning or other forms of analytics such as Data Warehousing or something more real-time to power upstream platforms and applications.
