@@ -1,10 +1,10 @@
 # Module 3. Augmenting User Behaviour Profiles with Contact Centre Data
 
 ## Background
-In this module, we will use Amazon's Elasticsearch service (Amazon ES) for real-time analytics of contact trace records (CTR) from an Amazon Connect contact center. A detailed list of components used in the solution are as follows:
+In this module, we will use Amazon's Elasticsearch service (Amazon ES) for real-time analytics of contact trace records (CTR) from an Amazon Connect contact centre. A detailed list of components used in the solution are as follows:
 
 ### Amazon Connect
-Amazon Connect is a self-service, cloud-based contact center service based on the same contact center technology used by Amazon customer service associates around the world to power millions of customer conversations. There are no up-front payments or long-term commitments and no infrastructure to manage with Amazon Connect; customers pay by the minute for Amazon Connect usage plus any associated telephony services.
+Amazon Connect is a self-service, cloud-based contact centre service based on the same contact centre technology used by Amazon customer service associates around the world to power millions of customer conversations. There are no up-front payments or long-term commitments and no infrastructure to manage with Amazon Connect; customers pay by the minute for Amazon Connect usage plus any associated telephony services.
 In Amazon Connect, data about contacts, such as the amount of time a contact spends in each state (customer on hold, customer in queue, agent interaction time) are captured in contact trace records (CTR). The basis for most historical and real-time metrics in Amazon Connect is the data in the CTR.
 
 ### Amazon Kinesis Firehose
@@ -14,13 +14,13 @@ Amazon Kinesis Data Firehose is the easiest way to reliably load streaming data 
 AWS Lambda is a serverless compute service that runs your code in response to events and automatically manages the underlying compute resources for you. You can use AWS Lambda to extend other AWS services with custom logic, or create your own back-end services that operate at AWS scale, performance, and security. 
 
 ### Amazon Elasticsearch and Kibana
-Amazon Elasticsearch Service, is a fully managed service that makes it easy for you to deploy, secure, operate, and scale Elasticsearch to search, analyze, and visualize data in real-time. With Amazon Elasticsearch Service you get easy-to-use APIs and real-time analytics capabilities to power use-cases such as log analytics, full-text search, application monitoring, and clickstream analytics, with enterprise-grade availability, scalability, and security. The service offers integrations with open-source tools like Kibana that provide data visualization and exploration capabilities.
+Amazon Elasticsearch Service, is a fully managed service that makes it easy for you to deploy, secure, operate, and scale Elasticsearch to search, analyze, and visualize data in real-time. With Amazon Elasticsearch Service you get easy-to-use APIs and real-time analytics capabilities to power use-cases such as log analytics, full-text search, application monitoring, and clickstream analytics, with enterprise-grade availability, scalability, and security. The service offers integrations with open-source tools like Kibana that provide data visualisation and exploration capabilities.
 
 ## Lab Architecture 
 ![alt text](images/architecture.png "Logo Title Text 1")
 
 ### Workflow
-1. A user calls the Amazon Connect call center and navigates the touch tone menu.
+1. A user calls the Amazon Connect call centre and navigates the touch tone menu.
 1. Amazon Connect generates a Contact Trace Record and places it in the Kinesis Firehose stream.
 1. A lambda function is invoked to detect the name of the caller based on the phone number and ammend the CTR.
 1. The ammended CTR is delivered to Elasticsearch.
@@ -60,7 +60,7 @@ Use the console or AWS CLI to provision Amazon Connect.
   ---
   **NOTE**
 
-  The name that you enter is displayed as the instance alias in the AWS Management Console, and is used as the domain in the access URL to access your contact center. The alias must be globally unique, meaning that an alias can be used only one time across all Amazon Connect instances and Regions. 
+  The name that you enter is displayed as the instance alias in the AWS Management Console, and is used as the domain in the access URL to access your contact centre. The alias must be globally unique, meaning that an alias can be used only one time across all Amazon Connect instances and Regions. 
 
   ---
 
@@ -198,7 +198,7 @@ def lambda_handler(event, context):
 </details>
 
 ## 3. Ingesting Connect call records with Kinesis Firehose
-Now that we have our call center provisioned, we need to add create a Kinesis Firehose Delivery stream to collect and transform Contact Trace Records, then deliver the records to our Elasticsearch cluster.
+Now that we have our call centre provisioned, we need to add create a Kinesis Firehose Delivery stream to collect and transform Contact Trace Records, then deliver the records to our Elasticsearch cluster.
 
 #### High-Level Instructions
 Use the console or AWS CLI to create a Kinesis Firehose stream to transform your records with the previously created lambda function, and deliver records to your existing Elasticsearch cluster. Once created, stream Contact Trace Records from your Amazon Connect instance to Kinesis Firehose.
@@ -253,7 +253,7 @@ The new Kinesis Data Firehose delivery stream takes a few moments in the creatin
 Now that our Kinesis Firehose delivery stream has been configured, we need to configure Amazon Connect to send Contact Trace Records to our stream to be delivered to Elasticsearch.
 
 #### High-Level Instructions
-Configure Amazon Connect to send its CTRs to the Kinesis Firehose delivery stream created in the previous step. Once complete, call your call center and observe the call details in Elasticsearch.
+Configure Amazon Connect to send its CTRs to the Kinesis Firehose delivery stream created in the previous step. Once complete, call your call centre and observe the call details in Elasticsearch.
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
@@ -273,17 +273,17 @@ Configure Amazon Connect to send its CTRs to the Kinesis Firehose delivery strea
 </details>
 
 ## 5. Test delivery of Call Trace Records to Elasticsearch
-Now that we have our plumbing in place, the Call Trace Records from Connect should be delivered directly to Elasticsearch when we call into our call center. 
+Now that we have our plumbing in place, the Call Trace Records from Connect should be delivered directly to Elasticsearch when we call into our call centre. 
 
 #### High-Level Instructions
-Call the Amazon Connect call center you set up in step 1, and observe the Kinesis and Lambda metrics in CloudWatch. View the call records appearing in Elasticsearch.
+Call the Amazon Connect call centre you set up in step 1, and observe the Kinesis and Lambda metrics in CloudWatch. View the call records appearing in Elasticsearch.
 
 `If you don't remember your claimed number, you can log into Connect as the administrator from the Overview tab in the left hand menu within your Connect instance, then View phone numbers in the main page`
 
 <details>
 <summary><strong>Testing CTR Delivery from Amazon Connect Step-by-step instructions (expand for details)</strong></summary><p>
 
-1. Call your Amazon Connect call center created in the first step and navigate the tone driven menu. After hanging up, navigate to CloudWatch and view the Kinesis and your ETL Lambda' CloudWatch log group to ensure record has been recieved, transformed and delivered.
+1. Call your Amazon Connect call centre created in the first step and navigate the tone driven menu. After hanging up, navigate to CloudWatch and view the Kinesis and your ETL Lambda' CloudWatch log group to ensure record has been recieved, transformed and delivered.
 
   ---
   **NOTE**
@@ -317,17 +317,19 @@ Call the Amazon Connect call center you set up in step 1, and observe the Kinesi
 
   + SSH into your Wordpress EC2 instance
   + Change to the working directory with the following command
+    
     ``` shell
     cd /home/ec2-user/module3
+    ```
 
-1. Open the amazonconnect.py script and change the value for `firehoseName` with the name of your Kinesis Firehose name.
+1. Open the amazonconnect.py script and change the value for the variable `firehoseName` with the name of your Kinesis Firehose name.
 
   ``` shell
   vim amazonconnect.py
   ```
 
   ``` python
-  # for syd, region = "ap-southeast-2"
+  # change value for firehoseName with your Connect stream's name e.g. CTRFHStream
   region = "ap-southeast-2"
   firehoseName = "<YOUR_CONNECT_STREAM>"
   ```
@@ -338,26 +340,26 @@ Call the Amazon Connect call center you set up in step 1, and observe the Kinesi
     . produce_connect.sh
     ```
 
-1. If sucessful, you should be abl to see output similar to this
+1. If successful, you should be able to see an output similar to below
 
   <img src="images/connectscript.png">
 
-1. Navigate back to kibana and ensure the records are showing under **Discover**. Ensure that the Time Range is set in the top righthand corner to pick up records for the past month. 
+1. Navigate back to kibana and ensure the records are streaming in under **Discover**. Ensure that the Time Range is set in the top righthand corner to pick up records for the past month. 
 
 </details>
 
-## 6. Create a visualization for CTR data in Kibana
+## 6. Create a visualisation for CTR data in Kibana
 Now that the data is being sent to Elasticsearch, it's time to create a simple visualisation to gain insights into the collected data. 
 
 #### High-Level Instructions
 Create a visualisation that displays the number of calls received by Amazon Connect per day.
 
 <details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+<summary><strong>Visualising Call Centre Data with Step-by-step instructions (expand for details)</strong></summary><p>
 
 1. From the left-hand navigation menu, choose **Visualize**.
 
-1. Click the “+” symbol to create a new visualization.
+1. Click the “+” symbol to create a new visualisation.
 
 1. Under **Data**, choose **Data Table**.
 
@@ -378,6 +380,11 @@ Create a visualisation that displays the number of calls received by Amazon Conn
 
 1. From the top ribbon menu, choose **Save**.
 
-1. Give your visualization a name and choose **Save**.
+1. Give your visualisation a name and choose **Save**.
 
 </details>
+
+# Other Applications of Data aggregation (or building a data lake)
+By being able to join different data sets together using a common field (eg. username, timestamp), we can gain additional insights into the behaviour of our customers and group similar profiles together. Through this mechanism, we can enable business outcomes such as targeted marketing, recommendation engines (collaborative filtering) to identifying topics to train our staff upon if we see a heavy bias towards a particular area.
+
+If we were to add additional sources of data such as customer purchase or sales history or an ERP system containing Inventory count into a real time data pipeline, this can unlock further business outcomes or identify new opportunities by correlation and discovering trends in the aggregate. 
