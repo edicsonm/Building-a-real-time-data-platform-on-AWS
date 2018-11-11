@@ -429,7 +429,9 @@ To ingest the streaming log data from our WAF, we can use [Amazon Kinesis Fireho
 
 1. For **S3 compression and encryption** check that the settings are set to **Disabled**, and for **Error logging**, ensure that it is **Enabled** for future troubleshooting if required.
 
-1. Under **IAM Role**, select **Create new or choose** to bring up a new IAM role creation page. Under IAM Role, use the drop down menu to select **Create a new IAM Role**. This will automatically generate the permissions required for our Firehose to use the configured settings for CloudWatch, S3, Lambda and ElasticSearch.
+1. Under **IAM Role**, select **Create new or choose** to bring up a new IAM role creation page. 
+
+1. Under IAM Role, use the drop down menu to select **Create a new IAM Role**, then enter a name such as `firehose_delivery_role_waf_logs` . This will automatically generate the permissions required for our Firehose to use the configured settings for CloudWatch, S3, Lambda and ElasticSearch.
 
 1. Proceed to the next step by selecting **Allow**.
 

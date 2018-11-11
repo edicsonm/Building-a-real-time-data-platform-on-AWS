@@ -26,7 +26,11 @@ We will first create the ETL Lambda function, which we will use later in our Kin
 
 1. For **Runtime**, select **Python 2.7**.
 
-1. Under **Role**, select **Create a custom role** to bring up a new IAM role creation page. Ensure that **Create a new IAM Role** is selected and proceed to the next step by selecting **Allow**. This will automatically generate a new IAM role with just enough permissions scoped to allow our Lambda function to extract data from our Kinesis and update the Elasticsearch index.
+1. Under **IAM Role**, select **Create a custom role** to bring up a new IAM role creation page. 
+
+1. Under IAM Role, use the drop down menu to select **Create a new IAM Role**, then enter a name such as `lambda_basic_execution_apache_ETL` . This will automatically generate the permissions required for our Lambda to run and write logs to CloudWatch.
+
+1. Proceed to the next step by selecting **Allow**.
 
 1. Back in create function page, proceed by selecting **Create function** at the bottom of the page.
 
@@ -212,7 +216,7 @@ Now that our ETL Lambda has been created, let's create a new Kinesis Data Fireho
 
 1. For **S3 compression and encryption** check that the settings are set to **Disabled**, and for **Error logging**, ensure that it is **Enabled** for future troubleshooting if required.
 
-1. Under **IAM Role**, select **Create new or choose** to bring up a new IAM role creation page. Under IAM Role, use the drop down menu to select **Create a new IAM Role**. This will automatically generate the permissions required for our Firehose to use the configured settings for CloudWatch, S3, Lambda and ElasticSearch.
+1. Under IAM Role, use the drop down menu to select **Create a new IAM Role**, then enter a name such as `firehose_delivery_role_clickstream` . This will automatically generate the permissions required for our Firehose to use the configured settings for CloudWatch, S3, Lambda and ElasticSearch.
 
     ![Firehose_ES](images/Firehose_IAM.png)
 
@@ -417,6 +421,7 @@ Below are examples of the generated log entries.
 1. Run the shell script, which will continually invoke the python script in a loop.
 
     ```shell
+    [ec2-user@ip-172-31-11-210 module2]$ sudo chmod +x produce.sh
     [ec2-user@ip-172-31-11-210 module2]$ . produce.sh 
     Generating new clickstream log at /var/log/httpd/access_log
     Press [CTRL+C] to stop..

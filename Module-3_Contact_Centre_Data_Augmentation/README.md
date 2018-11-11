@@ -87,6 +87,10 @@ Use the console or AWS CLI to provision Amazon Connect.
 
   ---
 
+<h3>[Optional] Customize Your Contact Flow</h3>
+Try creating your own customized contact flow using [Reference](https://docs.aws.amazon.com/connect/latest/userguide/contactflow.html) to simulate DTMF menus and [Amazon Lex integration for NLP chatbot](https://aws.amazon.com/blogs/contact-center/amazon-connect-with-amazon-lex-press-or-say-input/)
+
+
 </p></details>
 
 
@@ -337,6 +341,7 @@ Call the Amazon Connect call centre you set up in step 1, and observe the Kinesi
 1. Run the simulation script `produce_connect.sh` 
   
     ``` shell
+    sudo chmod +x produce_connect.sh
     . produce_connect.sh
     ```
 
