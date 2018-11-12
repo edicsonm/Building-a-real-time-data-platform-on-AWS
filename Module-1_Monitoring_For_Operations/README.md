@@ -51,7 +51,7 @@ Now that we have our SSH key, create a new web app stack using the following ins
 
 1. Give your stack a name such as `myStack`.
 
-1. **For Parameters**, populate the missing values for **DBPassword, DBUser and KeyName**(using what we made previously).
+1. **For Parameters**, populate the missing values for **DBPassword and DBUser**. For **KeyName**, select the key we made previously.
 
 1. For **SSHLocation**, you can use 0.0.0.0/0 to allow your EC2's Security Group to accept connections from Port 22. However in practice, you would restrict the IP address to a small known range such as your Corporate network. 
 
