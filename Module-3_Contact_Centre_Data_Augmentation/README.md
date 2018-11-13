@@ -329,7 +329,7 @@ Call the Amazon Connect call centre you set up in step 1, and observe the Kinesi
 1. Open the amazonconnect.py script and change the value for the variable `firehoseName` with the name of your Kinesis Firehose name.
 
   ``` shell
-  vim amazonconnect.py
+  sudo nano amazonconnect.py
   ```
 
   ``` python
@@ -337,6 +337,8 @@ Call the Amazon Connect call centre you set up in step 1, and observe the Kinesi
   region = "ap-southeast-2"
   firehoseName = "<YOUR_CONNECT_STREAM>"
   ```
+
+1. Save the file with ctrl+O (then enter), and exit by ctrl+X.
 
 1. Run the simulation script `produce_connect.sh` 
   
@@ -422,5 +424,7 @@ If we were to add additional sources of data such as customer purchase or sales 
 
 For the curious, below are some self-paced labs on building your first data pipeline, data lake and data warehousing:
 
+https://github.com/aws-samples/serverless-data-analytics
+https://dataprocessing.wildrydes.com/
 https://github.com/saltysoup/data-lake-workshop
 https://github.com/saltysoup/redshift-workshop

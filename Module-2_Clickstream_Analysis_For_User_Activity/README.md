@@ -446,7 +446,7 @@ Below are examples of the generated log entries.
 ## 3. Creating a Clickstream Dashboard on Kibana
 Try creating your own visuals using the newly added Index containing the clickstream sample data.
 
-Alternatively, you can import a dashboard template to see a working example.
+Alternatively, you can import a dashboard template to see a working example. `Note: Import may fail if you have named your domain and Indexes different to the example names above`
 
 1. Open your Kibana instance and select **Management** located on the left hand panel.
 
@@ -462,7 +462,36 @@ Alternatively, you can import a dashboard template to see a working example.
 
     ![Kibana_Dashboard](images/Kibana_Dashboard.png)
 
+# [Optional Lab] - Analyzing Clickstream data with Amazon Glue and Amazon Athena
+
+As we have a copy of the clickstream data being saved in our S3 bucket (as configured in Kinesis Data Firehose), this is a great starting point for building up a data lake. Try using Amazon Glue's crawler to discover the schema for our data in S3, then use Athena to run SQL queries on the Glue hive tables.
+
+In real world use cases, this can help complement existing Data Warehouses such as Redshift for heavier offline processing and analysis of your data.
+
+Below are some references to help get started.
+https://docs.aws.amazon.com/athena/latest/ug/glue-athena.html
+https://docs.aws.amazon.com/athena/latest/ug/getting-started.html
+https://aws.amazon.com/blogs/big-data/build-a-data-lake-foundation-with-aws-glue-and-amazon-s3/
+https://docs.aws.amazon.com/athena/latest/ug/ctas.html
+
+
 
 # Other Applications of Clickstream Analysis Data
 
 In this Module, we covered how we can start exploring our data through building visualisation. Although this is a great first step in understanding our data and gaining insights, you can also leverage other downstream applications such as Machine Learning or other forms of analytics such as Data Warehousing or something more real-time to power upstream platforms and applications.
+
+
+# Troubleshooting FAQs
+
+Q. I can't see clickstream logs being published to Kinesis Firehose via the Kinesis Agent
+A. Verify if your Agent config file is set to use your Firehose's delivery name, and the Agent service is running. You can also view the Agent log with `tail /var/log/aws-kinesis-agent/aws-kinesis-agent.log` to see if records are being successfully delivered.
+
+Q. I can't see clickstream data arriving in my Elasticsearch domain.
+A. Use the architecture diagram to see where the data flow is stalling in the pipeline.
+
+- For Kinesis, verify if the logs are arriving by using the built in metrics to see changes.
+- For verifying data integrity, download and view a copy of the data in your S3 bucket (as configured in Kinesis)
+- For verifying data delivery, use the Indices tab in Elasticsearch to see if the Index counters are incrementing
+- Verify that you have added a new Index Pattern within Kibana for the new data
+- For verifying data within the Kibana Index, try adjusting the time range at the top right, from default 15min to 7 days.
+

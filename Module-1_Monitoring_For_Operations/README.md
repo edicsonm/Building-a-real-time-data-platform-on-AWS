@@ -78,7 +78,7 @@ Now that our Web App environment is up and running, we can start capturing and s
 
 ## 1. Setting up CloudWatch Agent
 To set up CloudWatch, we will need to SSH into our instance and download/install the CloudWatch Agent package. Once we install the agent, we will need to set the configuration to tell the Agent what metrics it should capture.
-Detailed instructions can be [found here](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/install-CloudWatch-Agent-on-first-instance.html). As the EC2 instance already has the SSM agent installed and an IAM role associated with sufficient permissions, you can skip these sections.
+Detailed instructions can be [found here](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/install-CloudWatch-Agent-on-first-instance.html). In the installation guide, it refers to pre-requisites in installing the SSM agent and having an IAM role associated with your EC2 instance with sufficient permissions. As this has already been completed in the cloudformation template, you can ignore these sections.
 
 
 <details>
@@ -554,3 +554,18 @@ Now that we have captured WAF logs for both BLOCKED and ALLOWED requests in our 
 
 ## [Optional] RDS Logs to Elasticsearch
 With Enhanced Monitoring enabled for Amazon RDS instance, the service publishes metrics for your DB instance to CloudWatch Logs. As this has been already enabled for your RDS environment via CloudFormation, try to find `RDSOSMetrics` in your CloudWatch Log Group and stream it into your Elasticsearch as an additional data source. For configuring Log Format, you should use **JSON** for compatibility with ES.
+
+# Troubleshooting FAQs
+
+Q. Unable to find CloudWatch Agent config from SSM Parameter Store
+
+A. Verify if you used Sydney region (ap-southeast-2) to launch the Web App stack. If you have used another region, relaunch the CFN stack in Sydney region
+
+Q. Unable to see WAF logs in Kibana
+A. Use the architecture diagram to see where the data flow is stalling in the pipeline.
+
+- For Kinesis, verify if the logs are arriving by using the built in metrics to see changes.
+- For verifying data integrity, download and view a copy of the data in your S3 bucket (as configured in Kinesis)
+- For verifying data delivery, use the Indices tab in Elasticsearch to see if the Index counters are incrementing
+- For verifying data within the Kibana Index, try adjusting the time range at the top right, from default 15min to 7 days.
+
