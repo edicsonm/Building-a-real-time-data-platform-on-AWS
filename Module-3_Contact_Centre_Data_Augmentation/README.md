@@ -356,6 +356,8 @@ Call the Amazon Connect call centre you set up in step 1, and observe the Kinesi
 
 If you don't see the script generated records in your Index within Kibana, try refreshing the field list within Management -> Index Patterns, and adjusting the Time Range for 1 week.
 
+  <img src="images/Kibana_refresh.png">
+
 </details>
 
 ## 6. Creating Visualisation for CTR data in Kibana
