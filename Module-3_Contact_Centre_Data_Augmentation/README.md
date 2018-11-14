@@ -304,8 +304,9 @@ Call the Amazon Connect call centre you set up in step 1, and observe the Kinesi
 
 1. Select a metric dimension to view. To view if the record has arrived in the stream, view the 
 **PutRecord.Requests** dimension. To view if the Lambda function has been invoked, view the **Invocations** dimension. Multiple dimesions from multiple metrics can be selected. A list of metrics that can be observed can be found here:
-  + Lambda Metrics: https://docs.aws.amazon.com/lambda/latest/dg/monitoring-functions-metrics.html
-  + Firehose Metrics: https://docs.aws.amazon.com/firehose/latest/dev/monitoring-with-cloudwatch-metrics.html
+
+    + Lambda Metrics: https://docs.aws.amazon.com/lambda/latest/dg/monitoring-functions-metrics.html
+    + Firehose Metrics: https://docs.aws.amazon.com/firehose/latest/dev/monitoring-with-cloudwatch-metrics.html
 
 1. Now that we can see that data is flowing through our pipeline, let's go to Kibana and add the new Index.
 
@@ -319,8 +320,8 @@ Call the Amazon Connect call centre you set up in step 1, and observe the Kinesi
 
 1. Because we are unable to easily generate large call volumes (unless you like dialling), a simulation script has been provided for you to send dummy CTRs to Kinesis. To run this script, perform the following:
 
-  + SSH into your Wordpress EC2 instance
-  + Change to the working directory with the following command
+    + SSH into your Wordpress EC2 instance
+    + Change to the working directory with the following command
     
     ``` shell
     cd /home/ec2-user/module3
@@ -328,20 +329,20 @@ Call the Amazon Connect call centre you set up in step 1, and observe the Kinesi
 
 1. Open the amazonconnect.py script and change the value for the variable `firehoseName` with the name of your Kinesis Firehose name.
 
-  ``` shell
-  sudo nano amazonconnect.py
-  ```
+    ``` shell
+    sudo nano amazonconnect.py
+    ```
 
-  ``` python
-  # change value for firehoseName with your Connect stream's name e.g. CTRFHStream
-  region = "ap-southeast-2"
-  firehoseName = "<YOUR_CONNECT_STREAM>"
-  ```
+    ``` python
+    # change value for firehoseName with your Connect stream's name e.g. CTRFHStream
+    region = "ap-southeast-2"
+    firehoseName = "<YOUR_CONNECT_STREAM>"
+    ```
 
 1. Save the file with ctrl+O (then enter), and exit by ctrl+X.
 
 1. Run the simulation script `produce_connect.sh`. This will generate call record logs using a random timestamp within 7 days of current time and include information such as phone number, username (retrieved via our 'CRM' API), call queue type and the name of the connected agent.
-  
+    
     ``` shell
     sudo chmod +x produce_connect.sh
     . produce_connect.sh
@@ -417,6 +418,8 @@ Combining different customer channels can be a powerful tool as it can help buil
 
   <img src="images/Kibana_combined.png">
 
+1. If you create a Dashboard, you can also filter by username or phone number to only show relevant Visuals.
+
 </details>
 
 # Other Applications of Data aggregation (or building a data lake)
@@ -426,7 +429,8 @@ If we were to add additional sources of data such as customer purchase or sales 
 
 For the curious, below are some self-paced labs on building your first data pipeline, data lake and data warehousing:
 
-https://github.com/aws-samples/serverless-data-analytics
-https://dataprocessing.wildrydes.com/
-https://github.com/saltysoup/data-lake-workshop
-https://github.com/saltysoup/redshift-workshop
+- https://github.com/aws-samples/serverless-data-analytics
+
+- https://dataprocessing.wildrydes.com/
+- https://github.com/saltysoup/data-lake-workshop
+- https://github.com/saltysoup/redshift-workshop
