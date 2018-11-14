@@ -340,18 +340,20 @@ Call the Amazon Connect call centre you set up in step 1, and observe the Kinesi
 
 1. Save the file with ctrl+O (then enter), and exit by ctrl+X.
 
-1. Run the simulation script `produce_connect.sh` 
+1. Run the simulation script `produce_connect.sh`. This will generate call record logs using a random timestamp within 7 days of current time and include information such as phone number, username (retrieved via our 'CRM' API), call queue type and the name of the connected agent.
   
     ``` shell
     sudo chmod +x produce_connect.sh
     . produce_connect.sh
     ```
 
-1. If successful, you should be able to see an output similar to below
+1. If successful, you should be able to see an output similar to below. This means that the random call record log has been generated and published to the Kinesis Firehose using the AWS Python SDK.
 
-  <img src="images/connectscript.png">
+    <img src="images/connectscript.png">
 
-1. Navigate back to kibana and ensure the records are streaming in under **Discover**. Ensure that the Time Range is set in the top righthand corner to pick up records for the past month. 
+1.  Navigate back to kibana and ensure the records are streaming in under **Discover**.
+
+If you don't see the script generated records in your Index within Kibana, try refreshing the field list within Management -> Index Patterns, and adjusting the Time Range for 1 week.
 
 </details>
 
